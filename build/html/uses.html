@@ -1,0 +1,157 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>How to Use Hector From the Command Line &mdash; Hector 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Hector 0.1 documentation" href="index.html" />
+    <link rel="next" title="Hector - HTTP Guide" href="http.html" />
+    <link rel="prev" title="How to Install Hector" href="install.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="http.html" title="Hector - HTTP Guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="How to Install Hector"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Hector 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="how-to-use-hector-from-the-command-line">
+<h1>How to Use Hector From the Command Line<a class="headerlink" href="#how-to-use-hector-from-the-command-line" title="Permalink to this headline">¶</a></h1>
+<p>Using Hector from the Command Line:</p>
+<div class="highlight-python"><pre>$ hector --help
+   optional arguments:
+     -h, --help            show this help message and exit
+     --command COMMAND     agent command to run ['server', 'tune', 'restore',
+                           'snapshot']
+     --conf CONF           where to load configuration data
+     --cass-conf CASS_CONF
+                           configuration to tune cassandra
+     --restore-point RESTORE_POINT
+                           The name of the file to be used as a restore point w/o
+                           .tar.gz</pre>
+</div>
+<div class="section" id="the-available-list-of-commands-are-tune-server-and-restore">
+<h2>The available list of commands are tune, server, and restore.<a class="headerlink" href="#the-available-list-of-commands-are-tune-server-and-restore" title="Permalink to this headline">¶</a></h2>
+<p>The &#8211;conf option can be used to load a different configurator:</p>
+<div class="highlight-python"><pre>$ hector --command server --conf my-settings.py</pre>
+</div>
+<p>The &#8211;cass-conf option can be used in conjunction with the tune command to write the cassandra.yaml to non-default location:</p>
+<div class="highlight-python"><pre>$ hector --command tune --cass-conf /usr/path/cassandra.yaml
+$ ls -l /usr/path/cassandra.yaml
+  -rw-rw-r--. 1 guest guest 2549 Jul  99 03:56 cassandra.yam</pre>
+</div>
+<p>The restore command takes the non-optional &#8211;restore-point option.:</p>
+<div class="highlight-python"><pre>$ hector --command restore --restore-point 1372972141943</pre>
+</div>
+<p>The Restore Point should be a snapshot name, from a snapshot or backup that has been taken by the agent (i.e. ).:</p>
+<div class="highlight-python"><pre>hector::settings::config.py.backup_dir + [restore-point] + .tar.gz
+Should exist and be a compressed tar file of a backup or snapshot keyspaces</pre>
+</div>
+<p>The snapshot commmand performs the snapshot action using the current configuration in settings/config.py:</p>
+<div class="highlight-python"><pre>$ hector --command snapshot</pre>
+</div>
+<p>The Server command starts the Hector Agent processes.:</p>
+<div class="highlight-python"><pre>$ hector --command server</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">How to Use Hector From the Command Line</a><ul>
+<li><a class="reference internal" href="#the-available-list-of-commands-are-tune-server-and-restore">The available list of commands are tune, server, and restore.</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="previous chapter">How to Install Hector</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="http.html"
+                        title="next chapter">Hector - HTTP Guide</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="http.html" title="Hector - HTTP Guide"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="How to Install Hector"
+             >previous</a> |</li>
+        <li><a href="index.html">Hector 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sean McCully.
+    </div>
+  </body>
+</html>

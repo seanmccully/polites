@@ -1,0 +1,66 @@
+hector Package
+==============
+
+:mod:`hector` Package
+---------------------
+
+.. automodule:: hector.__init__
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`agent` Module
+-------------------
+
+.. automodule:: hector.agent
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`backwards` Module
+-----------------------
+
+.. automodule:: hector.backwards
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`cassandra` Module
+-----------------------
+
+.. automodule:: hector.cassandra
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`cassandra_log` Module
+---------------------------
+
+.. automodule:: hector.cassandra_log
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`hector` Module
+--------------------
+
+.. automodule:: hector.hector
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`utils` Module
+-------------------
+
+.. automodule:: hector.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    hector.settings
+

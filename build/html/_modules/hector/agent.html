@@ -1,0 +1,254 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>hector.agent &mdash; Hector 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Hector 0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Hector 0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for hector.agent</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">(c) 2013 Sean McCully</span>
+<span class="sd">#   Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may</span>
+<span class="sd">#   not use this file except in compliance with the License. You may obtain</span>
+<span class="sd">#   a copy of the License at</span>
+<span class="sd">#</span>
+<span class="sd">#       http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="sd">#</span>
+<span class="sd">#   Unless required by applicable law or agreed to in writing, software</span>
+<span class="sd">#   distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
+<span class="sd">#   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
+<span class="sd">#   License for the specific language governing permissions and limitations</span>
+<span class="sd">#   under the License.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="kn">from</span> <span class="nn">twisted.web.server</span> <span class="kn">import</span> <span class="n">Site</span>
+<span class="kn">from</span> <span class="nn">twisted.web.static</span> <span class="kn">import</span> <span class="n">File</span>
+<span class="kn">from</span> <span class="nn">twisted.internet</span> <span class="kn">import</span> <span class="n">reactor</span>
+<span class="kn">from</span> <span class="nn">twisted.web.resource</span> <span class="kn">import</span> <span class="n">Resource</span>
+<span class="kn">from</span> <span class="nn">twisted.internet.task</span> <span class="kn">import</span> <span class="n">LoopingCall</span>
+
+<span class="n">__dir__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
+<span class="n">__parent__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__dir__</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="s">&#39;PYTHONPATH&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">__parent__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">hector</span>
+<span class="kn">from</span> <span class="nn">hector.cassandra</span> <span class="kn">import</span> <span class="n">Cassandra</span>
+<span class="kn">from</span> <span class="nn">hector._hector</span> <span class="kn">import</span> <span class="n">Hector</span>
+<span class="kn">from</span> <span class="nn">hector._hector</span> <span class="kn">import</span> <span class="n">SnapShot</span>
+<span class="kn">from</span> <span class="nn">hector._hector</span> <span class="kn">import</span> <span class="n">Restore</span>
+<span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">tune</span>
+<span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">schedule_task</span>
+<span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">error_callback</span>
+<span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">get_backup_hour</span>
+<span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">calc_seconds_from_hour</span>
+<span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">load_config</span>
+<span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">set_path</span>
+<span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">find_www</span>
+
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="n">COMMANDS</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;server&quot;</span><span class="p">,</span> <span class="s">&quot;tune&quot;</span><span class="p">,</span> <span class="s">&quot;restore&quot;</span><span class="p">,</span> <span class="s">&quot;snapshot&quot;</span> <span class="p">]</span>
+
+
+<div class="viewcode-block" id="setup_tasks"><a class="viewcode-back" href="../../hector.html#hector.agent.setup_tasks">[docs]</a><span class="k">def</span> <span class="nf">setup_tasks</span><span class="p">(</span><span class="n">cass</span><span class="p">):</span>
+    <span class="n">monitor</span> <span class="o">=</span> <span class="n">LoopingCall</span><span class="p">(</span><span class="n">cass</span><span class="o">.</span><span class="n">monitor_proc</span><span class="p">,</span> <span class="n">cass</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">deferred</span> <span class="o">=</span> <span class="n">monitor</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">deferred</span><span class="o">.</span><span class="n">addErrback</span><span class="p">(</span><span class="n">error_callback</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cass</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">auto_snapshot</span><span class="p">:</span>
+        <span class="n">schedule_task</span><span class="p">(</span><span class="n">calc_seconds_from_hour</span><span class="p">(</span><span class="n">get_backup_hour</span><span class="p">(</span><span class="n">cass</span><span class="o">.</span><span class="n">config</span><span class="p">)),</span>
+                      <span class="n">cass</span><span class="o">.</span><span class="n">take_snapshot</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cass</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">enable_backups</span><span class="p">:</span>
+        <span class="n">schedule_task</span><span class="p">(</span><span class="n">calc_seconds_from_hour</span><span class="p">(</span><span class="n">get_backup_hour</span><span class="p">(</span><span class="n">cass</span><span class="o">.</span><span class="n">config</span><span class="p">)),</span>
+                      <span class="n">cass</span><span class="o">.</span><span class="n">take_backup</span><span class="p">)</span>
+
+
+</div>
+<div class="viewcode-block" id="handle_tune"><a class="viewcode-back" href="../../hector.html#hector.agent.handle_tune">[docs]</a><span class="k">def</span> <span class="nf">handle_tune</span><span class="p">(</span><span class="n">cass</span><span class="p">):</span>
+    <span class="n">tune</span><span class="p">(</span><span class="n">cass</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="make_server"><a class="viewcode-back" href="../../hector.html#hector.agent.make_server">[docs]</a><span class="k">def</span> <span class="nf">make_server</span><span class="p">(</span><span class="n">cass</span><span class="p">):</span>
+    <span class="n">setup_tasks</span><span class="p">(</span><span class="n">cass</span><span class="p">)</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">Resource</span><span class="p">()</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">putChild</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">Hector</span><span class="p">(</span><span class="n">cass</span><span class="p">))</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">putChild</span><span class="p">(</span><span class="s">&#39;snapshots&#39;</span><span class="p">,</span> <span class="n">SnapShot</span><span class="p">(</span><span class="n">cass</span><span class="p">))</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">putChild</span><span class="p">(</span><span class="s">&#39;restore&#39;</span><span class="p">,</span> <span class="n">Restore</span><span class="p">(</span><span class="n">cass</span><span class="p">))</span>
+    <span class="n">www_path</span> <span class="o">=</span> <span class="n">find_www</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">www_path</span><span class="p">:</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">putChild</span><span class="p">(</span><span class="s">&#39;docs&#39;</span><span class="p">,</span> <span class="n">File</span><span class="p">(</span><span class="n">www_path</span><span class="p">))</span>
+    <span class="n">application</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">handle_tune</span><span class="p">(</span><span class="n">cass</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s">&quot;[make_server] unable to set configuration&quot;</span><span class="p">)</span>
+    <span class="n">reactor</span><span class="o">.</span><span class="n">callLater</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">cass</span><span class="o">.</span><span class="n">find_snapshot</span><span class="p">)</span>
+    <span class="n">reactor</span><span class="o">.</span><span class="n">listenTCP</span><span class="p">(</span><span class="n">cass</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">default_web_port</span><span class="p">,</span> <span class="n">application</span><span class="p">)</span>
+    <span class="n">reactor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="setup_logging"><a class="viewcode-back" href="../../hector.html#hector.agent.setup_logging">[docs]</a><span class="k">def</span> <span class="nf">setup_logging</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">log_dir</span><span class="p">:</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">log_dir</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="s">&#39;hector.log&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">log_format</span><span class="p">:</span>
+        <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">log_format</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%(asctime)s</span><span class="s"> </span><span class="si">%(levelname)s</span><span class="s"> </span><span class="si">%(message)s</span><span class="s">&#39;</span><span class="p">)</span>
+    <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">log_level</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">log_level</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../hector.html#hector.agent.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">cassandra</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="ow">in</span> <span class="n">COMMANDS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="n">COMMANDS</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">make_server</span><span class="p">(</span><span class="n">cassandra</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="n">COMMANDS</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">handle_tune</span><span class="p">(</span><span class="n">cassandra</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="n">COMMANDS</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">restore_point</span><span class="p">:</span>
+                <span class="n">restore_point</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cassandra</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">backup_dir</span><span class="p">,</span>
+                                             <span class="n">args</span><span class="o">.</span><span class="n">restore_point</span> <span class="o">+</span> <span class="s">&#39;.tar.gz&#39;</span><span class="p">)</span>
+                <span class="n">cassandra</span><span class="o">.</span><span class="n">do_restore</span><span class="p">(</span><span class="n">restore_point</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentError</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span>
+                                             <span class="s">&quot;restore commands restore-point&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">command</span> <span class="o">==</span> <span class="n">COMMANDS</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+            <span class="n">cassandra</span><span class="o">.</span><span class="n">take_snapshot</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">cass_conf</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentError</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="s">&quot;conf needs command&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentError</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="s">&quot;unknown command&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="use_path"><a class="viewcode-back" href="../../hector.html#hector.agent.use_path">[docs]</a><span class="k">def</span> <span class="nf">use_path</span><span class="p">(</span><span class="n">conf</span><span class="p">):</span>
+    <span class="n">ins_pth</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&#39;/usr&#39;</span><span class="p">,</span> <span class="s">&#39;etc&#39;</span><span class="p">,</span> <span class="s">&#39;hector&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">conf</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">set_path</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ins_pth</span><span class="p">,</span> <span class="s">&#39;config.py&#39;</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">set_path</span><span class="p">(</span><span class="n">ins_pth</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">set_path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hector</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&#39;..&#39;</span><span class="p">,</span> <span class="s">&#39;settings&#39;</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../hector.html#hector.agent.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&quot;--command&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&quot;agent command to run </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">COMMANDS</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&quot;--conf&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&quot;where to load configuration data&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&quot;--cass-conf&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&quot;configuration to tune cassandra&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&quot;--restore-point&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">&quot;The name of the file to &quot;</span> <span class="o">+</span>
+                        <span class="s">&quot;be used as a restore point w/o .tar.gz&quot;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">use_path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">()</span>
+    <span class="n">setup_logging</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">VERSION</span> <span class="o">==</span> <span class="mf">1.2</span><span class="p">:</span>
+        <span class="n">update_func</span> <span class="o">=</span> <span class="n">Cassandra</span><span class="o">.</span><span class="n">update_defaults_1_2</span>
+    <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">VERSION</span> <span class="o">==</span> <span class="mf">1.1</span><span class="p">:</span>
+        <span class="n">update_func</span> <span class="o">=</span> <span class="n">Cassandra</span><span class="o">.</span><span class="n">update_defaults_1_1</span>
+
+    <span class="n">cassandra</span> <span class="o">=</span> <span class="n">Cassandra</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">update_func</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">conf</span><span class="p">:</span>
+        <span class="n">cassandra</span><span class="o">.</span><span class="n">cassandra_yaml</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">conf</span>
+    <span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">cassandra</span><span class="p">)</span>
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Hector 0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sean McCully.
+    </div>
+  </body>
+</html>

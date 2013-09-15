@@ -1,0 +1,6 @@
+twisted
+pyyaml
+sphinx
+argparse
+pbr
+setuptools

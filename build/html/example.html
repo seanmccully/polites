@@ -1,0 +1,204 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Example setting up a Cassandra Cluster &mdash; Hector 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Hector 0.1 documentation" href="index.html" />
+    <link rel="prev" title="Hector - HTTP Guide" href="http.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="http.html" title="Hector - HTTP Guide"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Hector 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="example-setting-up-a-cassandra-cluster">
+<h1>Example setting up a Cassandra Cluster<a class="headerlink" href="#example-setting-up-a-cassandra-cluster" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="setting-up-a-3-node-cassandra-cluster">
+<h2>Setting Up a 3 Node Cassandra Cluster<a class="headerlink" href="#setting-up-a-3-node-cassandra-cluster" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to use hector is to use the bootstrap script. Which installs the python dependencies and cassandra to path that hector uses as the config defaults. But this can easily be changed by
+modifying the config settings.:</p>
+<div class="highlight-python"><pre>$ git clone https://github.com/seanmccully/hector.git
+Initialized empty Git repository in /home/smccully/hector/.git/
+remote: Counting objects: 342, done.
+remote: Compressing objects: 100% (238/238), done.
+remote: Total 342 (delta 199), reused 234 (delta 93)
+Receiving objects: 100% (342/342), 260.50 KiB, done.
+Resolving deltas: 100% (199/199), done.
+
+
+$ cd hector/
+$ ./bootstrap.sh
+which: no java in (/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/smccully/bin)
+which: no 2 in (/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/smccully/bin)
+which: no 2 in (/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/smccully/bin)
+Loaded plugins: fastestmirror
+Determining fastest mirrors
+ * base: centosz4.centos.org
+ * extras: centosb5.centos.org
+ * updates: centosi5.centos.org
+Setting up Install Process
+.....
+....</pre>
+</div>
+<p>Optionally you can install just hector and the python dependencies:</p>
+<div class="highlight-python"><pre>$ cd hector/
+$ python setup.py install</pre>
+</div>
+<p>Once the install script has finished, can run from /usr/bin/hector.py:</p>
+<div class="highlight-python"><pre>$ hector --command server</pre>
+</div>
+<p>When ready to start additional nodes in the cluster, will need to make a few modifications to the configuration. Open /usr/etc/hector/config.py in your favorite editor.:</p>
+<div class="highlight-python"><pre>$ vi /usr/etc/hector/config.py
+
+        seeds = '192.168.1.93' # Set this to the first cassandra node you started
+        cluster_num = 1 # Set this to the number which node represents in the ring
+        num_nodes = 3 # Here we set the number to total number of nodes we plan on using
+
+$ hector.py --command server</pre>
+</div>
+<p>Finally we can check that cassandra is running on all hosts.:</p>
+<div class="highlight-python"><pre>$ curl http://192.168.1.93:8080
+&lt;xml&gt;&lt;status&gt;Running&lt;/status&gt;&lt;/xml&gt;
+
+
+$ curl http://192.168.1.94:8080
+&lt;xml&gt;&lt;status&gt;Running&lt;/status&gt;&lt;/xml&gt;
+
+$ curl http://192.168.1.95:8080
+&lt;xml&gt;&lt;status&gt;Running&lt;/status&gt;&lt;/xml&gt;</pre>
+</div>
+<p>Finally We should be able to check that all nodes belong to the same ring.:</p>
+<div class="highlight-python"><pre>$ /var/lib/cassandra/bin/nodetool ring
+Note: Ownership information does not include topology; for complete information, specify a keyspace
+
+Datacenter: datacenter1
+==========
+Address       Rack        Status State   Load            Owns                Token
+                                                                             3074457345618258602
+192.168.1.93  rack1       Up     Normal  74.76 KB        33.33%              -6148914691239313638
+192.168.1.93  rack1       Up     Normal  74.76 KB        33.33%              -6148914691237216715
+192.168.1.93  rack1       Up     Normal  74.76 KB        33.33%              0
+192.168.1.95  rack1       Up     Normal  69.98 KB        50.00%              -6148914691236517547
+192.168.1.95  rack1       Up     Normal  69.98 KB        50.00%              -683
+192.168.1.95  rack1       Up     Normal  69.98 KB        50.00%              6148914691236517205
+192.168.1.94  rack1       Up     Normal  38.4 KB         16.67%              1024819115206086126
+192.168.1.94  rack1       Up     Normal  38.4 KB         16.67%              2049638230412172279
+192.168.1.94  rack1       Up     Normal  38.4 KB         16.67%              3074457345618258602</pre>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<p>Hector Will try to provide the latest error from the cassandra log file. There isn&#8217;t always an error in the log file if cassandra fails to start.
+In these cases hector just prints a general error message.:</p>
+<div class="highlight-python"><pre>$ curl http://192.168.1.95:8080
+&lt;xml&gt;&lt;status&gt;Stopped&lt;/status&gt;&lt;error&gt;&lt;![CDATA[possible configuration error]]&gt;&lt;/error&gt;&lt;/xml&gt;
+
+
+
+
+$ curl http://192.168.1.95:8080
+&lt;xml&gt;&lt;status&gt;Stopped&lt;/status&gt;&lt;error&gt;&lt;![CDATA[ERROR [main] 2013-09-08 23:44:47,137 DatabaseDescriptor.java (line 503) Fatal configuration error
+at org.apache.cassandra.dht.Murmur3Partitioner$1.validate(Murmur3Partitioner.java:182)
+at org.apache.cassandra.config.DatabaseDescriptor.loadYaml(DatabaseDescriptor.java:443)
+at org.apache.cassandra.config.DatabaseDescriptor.&lt;clinit&gt;(DatabaseDescriptor.java:123)
+at org.apache.cassandra.service.CassandraDaemon.setup(CassandraDaemon.java:217)
+at org.apache.cassandra.service.CassandraDaemon.activate(CassandraDaemon.java:447)
+at org.apache.cassandra.service.CassandraDaemon.main(CassandraDaemon.java:490)</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Example setting up a Cassandra Cluster</a><ul>
+<li><a class="reference internal" href="#setting-up-a-3-node-cassandra-cluster">Setting Up a 3 Node Cassandra Cluster</a></li>
+<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="http.html"
+                        title="previous chapter">Hector - HTTP Guide</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="http.html" title="Hector - HTTP Guide"
+             >previous</a> |</li>
+        <li><a href="index.html">Hector 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sean McCully.
+    </div>
+  </body>
+</html>

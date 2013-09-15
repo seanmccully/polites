@@ -1,0 +1,160 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hector - HTTP Guide &mdash; Hector 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Hector 0.1 documentation" href="index.html" />
+    <link rel="next" title="Example setting up a Cassandra Cluster" href="example.html" />
+    <link rel="prev" title="How to Use Hector From the Command Line" href="uses.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="example.html" title="Example setting up a Cassandra Cluster"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="uses.html" title="How to Use Hector From the Command Line"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Hector 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="hector-http-guide">
+<h1>Hector - HTTP Guide<a class="headerlink" href="#hector-http-guide" title="Permalink to this headline">¶</a></h1>
+<p>Hector server command supports the following HTTP Table</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="6%" />
+<col width="50%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">HTTP Method</th>
+<th class="head">HTTP Path</th>
+<th class="head">Request Args/Response Data</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>GET</td>
+<td>/</td>
+<td>&lt;xml&gt;&lt;status&gt;[Running|Stopped]&lt;/status&gt;&lt;error&gt;&lt;![CDATA[%s]]&gt;&lt;/error&gt;&lt;/xml&gt;</td>
+<td>Return Current Status of Cassandra Process with Error Message</td>
+</tr>
+<tr class="row-odd"><td>POST</td>
+<td>/</td>
+<td>(optional)* restart=True|False</td>
+<td>Start or Restart Process</td>
+</tr>
+<tr class="row-even"><td>GET</td>
+<td>/snapshot</td>
+<td>&lt;xml&gt;&lt;auto-snapshot&gt;T|F&lt;/auto-snapshot&gt;&lt;last-snapshot&gt;[VALUE]&lt;/last-snapshot&gt;&lt;/xml&gt;</td>
+<td>True if auto-snapshot enabled, and last recored snapshot</td>
+</tr>
+<tr class="row-odd"><td>PUT</td>
+<td>/snapshot</td>
+<td>&lt;xml&gt;&lt;snapshot&gt;True&lt;/snapshot&gt;&lt;/xml&gt;</td>
+<td>Takes a snapshot</td>
+</tr>
+<tr class="row-even"><td>POST</td>
+<td>/restore</td>
+<td>snapsot-name=[SNAPSHOT NAME|Backup Name]</td>
+<td>Restore from a recorded snapshot or backup with name provided</td>
+</tr>
+<tr class="row-odd"><td>GET</td>
+<td>/docs</td>
+<td>&nbsp;</td>
+<td>This documentation!!!!</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="uses.html"
+                        title="previous chapter">How to Use Hector From the Command Line</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="example.html"
+                        title="next chapter">Example setting up a Cassandra Cluster</a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="example.html" title="Example setting up a Cassandra Cluster"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="uses.html" title="How to Use Hector From the Command Line"
+             >previous</a> |</li>
+        <li><a href="index.html">Hector 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sean McCully.
+    </div>
+  </body>
+</html>
