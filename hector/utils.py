@@ -116,6 +116,16 @@ def calc_seconds_from_hour(hour):
     return tot_seconds
 
 
+def append_jvm_opt(cass):
+    cass_env = os.path.join(cass.config.cass_home, 'conf',
+                            'cassandra-env.sh')
+    if os.path.exists(cass_env):
+        fh = open(cass_env, 'a')
+        str_data = """JVM_OPTS="$JVM_OPTS -Xss256k" """
+        fh.write(str_data)
+        fh.close()
+
+
 def handle_pid(file_location):
     try:
         os.stat(file_location)

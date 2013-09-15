@@ -19,7 +19,7 @@ config_11_yaml = 'restore-cassandra-1.1.yaml'
 config_12_yaml = 'restore-cassandra-1.2.yaml'
 config_20_yaml = 'restore-cassandra.yaml'
 
-##Location Snapshots and Backups are saved 
+##Location Snapshots and Backups are saved
 backup_dir = "/mnt/backup"
 log_dir = None
 log_format = None
@@ -41,9 +41,9 @@ authenticator = "AllowAllAuthenticator"
 authorizer = "AllowAllAuthorizer"
 authority = "org.apache.cassandra.auth.AllowAllAuthority"
 cluster_name = "Test Cluster"
-commitlog_directory = "/var/lib/cassandra/commitlog"
+commitlog_directory = ["/var/lib/cassandra/commitlog"]
 compaction_throughput_mb_per_sec = 8
-data_file_directories = "/var/lib/cassandra/data"
+data_file_directories = ["/var/lib/cassandra/data"]
 endpoint_snitch = "SimpleSnitch"
 ##endpoint_snitch = "org.apache.cassandra.locator.Ec2Snitch"
 hinted_handoff_throttle_in_kb = 1024
@@ -55,8 +55,8 @@ jmx_port = 7199
 storage_port = 7000
 saved_caches_directory = "/var/lib/cassandra/saved_caches"
 max_hint_window_in_ms = 8
-partitioner = "org.apache.cassandra.dht.Murmur3Partitioner"
-rpc_port = 9160 
+partitioner = "org.apache.cassandra.dht.RandomPartitioner"
+rpc_port = 9160
 seed_provider = None
 seeds = '127.0.0.1'
 ssl_storage_port = 7001

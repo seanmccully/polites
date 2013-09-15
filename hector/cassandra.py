@@ -34,6 +34,7 @@ from hector.utils import get_backup_hour
 from hector.utils import calc_seconds_from_hour
 from hector.utils import load_config
 from hector.utils import handle_pid
+from hector.utils import append_jvm_opt
 
 LOGGER = logging.getLogger(__name__)
 
@@ -87,6 +88,8 @@ class Cassandra(object):
         yaml_data['incremental_backups'] = self.backups_enabled()
         if self.config.cluster_num:
             yaml_data['initial_token'] = self._token_gen()
+        if self.config.num_nodes:
+            yaml_data['num_tokens'] = self.config.num_nodes
 
         self.setup_seeds(yaml_data, key_list, pop_key)
         self.setup_key_row_caches(yaml_data, key_list, pop_key)
@@ -107,9 +110,9 @@ class Cassandra(object):
         yaml_data['listen_address'] = hostname
         yaml_data['rpc_address'] = hostname
         yaml_data['initial_token'] = self._token_gen()
+        yaml_data['num_tokens'] = self.config.num_nodes
         self.setup_key_row_caches(yaml_data, key_list, pop_key)
         self.setup_seeds(yaml_data, key_list, pop_key)
-
         self.set_keys(yaml_data, key_list)
         LOGGER.debug("[update_defaults_1_1] leaving")
 
@@ -183,21 +186,23 @@ class Cassandra(object):
         else:
             return False
 
+    @property
+    def commitlog_directory(self):
+        if type(self.config.commitlog_directory) is list:
+            return self.config.commitlog_directory[0]
+        else:
+            return self.config.commitlog_directory
+
     def modify_environment(self):
         """
             Modify environment with config
             for running cassandra commands
         """
         env = os.environ.copy()
-        if type(self.config.data_file_directories) is list:
-            data_dir = self.config.data_file_directories[0]
-        else:
-            data_dir = self.config.data_file_directories
-
         new_env_vars = {"HEAP_NEWSIZE": self.config.heap_newgen_size,
                         "MAX_HEAP_SIZE": self.config.max_heap_size,
-                        "DATA_DIR": data_dir,
-                        "COMMIT_LOG_DIR": self.config.commitlog_directory,
+                        "DATA_DIR": self.data_file_directories,
+                        "COMMIT_LOG_DIR": self.commitlog_directory,
                         "LOCAL_BACKUP_DIR": self.config.backup_location,
                         "CACHE_DIR": self.config.saved_caches_directory,
                         "JMX_PORT": str(self.config.jmx_port),
@@ -211,6 +216,8 @@ class Cassandra(object):
         """
             Run a cassandra command
         """
+        jvm_err = ("The stack size specified is too small," +
+                   " Specify at least 228k")
         LOGGER.debug("[_run_command] called with command [%s]", command)
         if use_su:
             commands = self.su_command.split(' ')
@@ -232,6 +239,8 @@ class Cassandra(object):
         ps.wait()
         output = ps.communicate()
         LOGGER.debug("[_run_command] output [%s]", output)
+        if len(output[0]) and jvm_err in output[0]:
+            append_jvm_opt(self)
         if output[0]:
             return output[0] or output[1]
         else:
@@ -398,12 +407,19 @@ class Cassandra(object):
         LOGGER.debug("[clear_snapshot] leaving")
         return False
 
+    @property
+    def data_file_directories(self):
+        if type(self.config.data_file_directories) is list:
+            return self.config.data_file_directories[0]
+        else:
+            return self.config.data_file_directories
+
     def take_backup(self, backup_name=None):
         """
             Collect incremental backups and compress
         """
         LOGGER.debug("[take_backup] called")
-        data_dir = self.config.data_file_directories
+        data_dir = self.data_file_directories
         if type(data_dir) is list:
             data_dir = data_dir[0]
         backup_dir = self.config.backup_dir
@@ -432,7 +448,7 @@ class Cassandra(object):
             snapshot_name = self.latest_snapshot
         LOGGER.debug("[verify_snapshot] snapshot_name [%s]", snapshot_name)
 
-        data_dir = self.config.data_file_directories
+        data_dir = self.data_file_directories
         if type(data_dir) is list:
             data_dir = data_dir[0]
         backup_dir = self.config.backup_dir
@@ -454,13 +470,13 @@ class Cassandra(object):
         """
         LOGGER.debug("[do_restore] called with restore_poit [%s]",
                      restore_point)
+        commit_dir = self.commitlog_directory
         if self.stop_cassandra():
-            if os.path.exists(self.config.commitlog_directory):
+            if os.path.exists(commit_dir):
                 LOGGER.debug("[do_restore] Removing commitlog [%s]",
-                             self.config.commitlog_directory)
-                for file in os.listdir(self.config.commitlog_directory):
-                    os.remove(os.path.join(self.config.commitlog_directory,
-                                           file))
+                             commit_dir)
+                for file in os.listdir(commit_dir):
+                    os.remove(os.path.join(commit_dir, file))
 
             snapshot_file = tarfile.open(restore_point, 'r:gz')
             snapshot_name = snapshot_file.name.split('/')[-1]
