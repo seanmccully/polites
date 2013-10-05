@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Hector - HTTP Guide &mdash; Hector 0.1 documentation</title>
+    <title>Contact and Bgs &mdash; Hector 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,8 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Hector 0.1 documentation" href="index.html" />
-    <link rel="next" title="Example setting up a Cassandra Cluster" href="example.html" />
-    <link rel="prev" title="How to Use Hector From the Command Line" href="uses.html" /> 
+    <link rel="prev" title="Example setting up a Cassandra Cluster" href="example.html" /> 
   </head>
   <body>
     <div class="related">
@@ -41,9 +40,6 @@
              >modules</a> |</li>
         <li class="right" >
           <a href="example.html" title="Example setting up a Cassandra Cluster"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="uses.html" title="How to Use Hector From the Command Line"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">Hector 0.1 documentation</a> &raquo;</li> 
       </ul>
@@ -54,57 +50,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="hector-http-guide">
-<h1>Hector - HTTP Guide<a class="headerlink" href="#hector-http-guide" title="Permalink to this headline">¶</a></h1>
-<p>Hector server command supports the following HTTP Table</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="7%" />
-<col width="6%" />
-<col width="50%" />
-<col width="36%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">HTTP Method</th>
-<th class="head">HTTP Path</th>
-<th class="head">Request Args/Response Data</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>GET</td>
-<td>/</td>
-<td>&lt;xml&gt;&lt;status&gt;[Running|Stopped]&lt;/status&gt;&lt;error&gt;&lt;![CDATA[%s]]&gt;&lt;/error&gt;&lt;/xml&gt;</td>
-<td>Return Current Status of Cassandra Process with Error Message</td>
-</tr>
-<tr class="row-odd"><td>POST</td>
-<td>/</td>
-<td>(optional)* restart=True|False</td>
-<td>Start or Restart Process</td>
-</tr>
-<tr class="row-even"><td>GET</td>
-<td>/snapshot</td>
-<td>&lt;xml&gt;&lt;auto-snapshot&gt;T|F&lt;/auto-snapshot&gt;&lt;last-snapshot&gt;[VALUE]&lt;/last-snapshot&gt;&lt;/xml&gt;</td>
-<td>True if auto-snapshot enabled, and last recorded snapshot</td>
-</tr>
-<tr class="row-odd"><td>PUT</td>
-<td>/snapshot</td>
-<td>&lt;xml&gt;&lt;snapshot&gt;True&lt;/snapshot&gt;&lt;/xml&gt;</td>
-<td>Takes a snapshot</td>
-</tr>
-<tr class="row-even"><td>POST</td>
-<td>/restore</td>
-<td>snapshot-name=[SNAPSHOT NAME|Backup Name]</td>
-<td>Restore from a recorded snapshot or backup with name provided</td>
-</tr>
-<tr class="row-odd"><td>GET</td>
-<td>/docs</td>
-<td>&nbsp;</td>
-<td>This documentation!!!!</td>
-</tr>
-</tbody>
-</table>
-<p><a class="reference internal" href="contact.html"><em>Contact and Bgs</em></a></p>
+  <div class="section" id="contact-and-bgs">
+<h1>Contact and Bgs<a class="headerlink" href="#contact-and-bgs" title="Permalink to this headline">¶</a></h1>
+<p>I hear software is prone to errors at times, if you run across an occurence while using this software I would love to hear about it. Or if you&#8217;re just interested in chatting, I&#8217;ll be sure to ponder whether I respond. Also if you notice something eschew with this documentation. You can contact me in several of the following manners.</p>
+<p>email: <a class="reference external" href="mailto:sean_mccully&#37;&#52;&#48;yahoo&#46;com">sean_mccully<span>&#64;</span>yahoo<span>&#46;</span>com</a></p>
+<p>github: <a class="reference external" href="http://github.com/seanmccully/hector.git">http://github.com/seanmccully/hector.git</a></p>
+<p>twitter: &#64;sean_mccully</p>
 </div>
 
 
@@ -114,11 +65,8 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="uses.html"
-                        title="previous chapter">How to Use Hector From the Command Line</a></p>
-  <h4>Next topic</h4>
   <p class="topless"><a href="example.html"
-                        title="next chapter">Example setting up a Cassandra Cluster</a></p>
+                        title="previous chapter">Example setting up a Cassandra Cluster</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -147,9 +95,6 @@
              >modules</a> |</li>
         <li class="right" >
           <a href="example.html" title="Example setting up a Cassandra Cluster"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="uses.html" title="How to Use Hector From the Command Line"
              >previous</a> |</li>
         <li><a href="index.html">Hector 0.1 documentation</a> &raquo;</li> 
       </ul>

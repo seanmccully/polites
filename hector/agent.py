@@ -32,23 +32,25 @@ if 'PYTHONPATH' not in os.environ:
     sys.path.append(__parent__)
 
 import hector
-from hector.cassandra import Cassandra
 from hector._hector import Hector
-from hector._hector import SnapShot
 from hector._hector import Restore
-from hector.utils import tune
-from hector.utils import schedule_task
-from hector.utils import error_callback
-from hector.utils import get_backup_hour
+from hector._hector import SnapShot
+from hector.cassandra import Cassandra
+from hector.client import HectorClient
+from hector.exceptions import HectorException
 from hector.utils import calc_seconds_from_hour
-from hector.utils import load_config
-from hector.utils import set_path
+from hector.utils import error_callback
 from hector.utils import find_www
+from hector.utils import get_backup_hour
+from hector.utils import load_config
+from hector.utils import schedule_task
+from hector.utils import set_path
+from hector.utils import tune
 
 LOGGER = logging.getLogger(__name__)
 
-COMMANDS = ["server", "tune", "restore", "snapshot"]
-
+COMMANDS = ["server", "tune", "restore", "snapshot", "client"]
+CLIENT_COMMANDS = HectorClient.commands
 
 def setup_tasks(cass):
     monitor = LoopingCall(cass.monitor_proc, cass.config)
@@ -66,12 +68,14 @@ def setup_tasks(cass):
 def handle_tune(cass):
     tune(cass)
 
+def run():
+    reactor.run()
 
 def make_server(cass):
     setup_tasks(cass)
     root = Resource()
     root.putChild('', Hector(cass))
-    root.putChild('snapshots', SnapShot(cass))
+    root.putChild('snapshot', SnapShot(cass))
     root.putChild('restore', Restore(cass))
     www_path = find_www()
     if www_path:
@@ -84,8 +88,13 @@ def make_server(cass):
         LOGGER.exception("[make_server] unable to set configuration")
     reactor.callLater(0, cass.find_snapshot)
     reactor.listenTCP(cass.config.default_web_port, application)
-    reactor.run()
+    run()
 
+def is_client(args, cassandra, extra):
+    if extra not in CLIENT_COMMANDS:
+        HectorException("Invalid Client Command")
+    HectorClient(cassandra.config, command=extra)
+    run()
 
 def setup_logging(config):
     logger = logging.getLogger()
@@ -105,26 +114,33 @@ def setup_logging(config):
         logger.setLevel(logging.INFO)
 
 
-def parse_args(args, cassandra, parser):
-    if args.command in COMMANDS:
+def parse_args(args, cassandra, parser, extra):
+    if len(extra) > 1:
+        raise HectorException("Invalid Command Option")
+    elif args.command in COMMANDS:
+        args.command = args.command.lower()
         if args.command == COMMANDS[0]:
-            make_server(cassandra)
+            return make_server(cassandra)
         elif args.command == COMMANDS[1]:
-            handle_tune(cassandra)
+            return handle_tune(cassandra)
         elif args.command == COMMANDS[2]:
             if args.restore_point:
                 restore_point = os.path.join(cassandra.config.backup_dir,
                                              args.restore_point + '.tar.gz')
-                cassandra.do_restore(restore_point)
+                return cassandra.do_restore(restore_point)
             else:
-                raise argparse.ArgumentError(None,
-                                             "restore commands restore-point")
-        elif args.command == COMMANDS[3]:
-            cassandra.take_snapshot()
+                raise HectorException("restore commands restore-point")
+        elif args.command.lower == COMMANDS[3]:
+            return cassandra.take_snapshot()
+        elif args.command == COMMANDS[4]: 
+            try:
+                return is_client(args, cassandra, extra[0])
+            except IndexError:
+                return is_client(args, cassandra, CLIENT_COMMANDS[0])
     elif args.cass_conf:
-        raise argparse.ArgumentError(None, "conf needs command")
-    else:
-        parser.print_usage()
+        raise HectorException("conf needs command")
+
+    parser.print_usage()
 
 
 def use_path(conf):
@@ -148,7 +164,8 @@ def main():
     parser.add_argument("--cass-conf", help="configuration to tune cassandra")
     parser.add_argument("--restore-point", help="The name of the file to " +
                         "be used as a restore point w/o .tar.gz")
-    args = parser.parse_args()
+    (args, extra, ) = parser.parse_known_args()
+
     use_path(args.conf)
     config = load_config()
     setup_logging(config)
@@ -164,7 +181,7 @@ def main():
 
     if args.conf:
         cassandra.cassandra_yaml = args.conf
-    parse_args(args, cassandra, parser)
+    parse_args(args, cassandra, parser, extra)
 
 if __name__ == "__main__":
     main()

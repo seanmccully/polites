@@ -1,0 +1,214 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>settings.config &mdash; Hector 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Hector 0.1 documentation" href="../../index.html" />
+    <link rel="up" title="settings" href="../settings.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Hector 0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../settings.html" accesskey="U">settings</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for settings.config</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">(c) 2013 Sean McCully</span>
+<span class="sd">Licenced under the Apache License, 2.0: http://opensource.org/licenses/apache2.0.php</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Hector"><a class="viewcode-back" href="../../config.html#settings.config.Hector">[docs]</a><span class="k">class</span> <span class="nc">Hector</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="c">#Hector config properties</span>
+  <span class="c">##Cassandra Process Name - used to check if process running</span>
+  <span class="n">cassandra_process_name</span> <span class="o">=</span> <span class="s">&quot;CassandraDaemon&quot;</span>
+  <span class="n">cassandra_user</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="c">##Cassandra start/stop commands</span>
+  <span class="n">cassandra_pid</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">,</span> <span class="s">&#39;var&#39;</span><span class="p">,</span> <span class="s">&#39;lib&#39;</span><span class="p">,</span> <span class="s">&#39;cassandra&#39;</span><span class="p">,</span> <span class="s">&#39;cassandra.pid&#39;</span><span class="p">,</span> <span class="p">)</span>
+  <span class="n">cassandra_start_options</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;-p&#39;</span><span class="p">,</span> <span class="n">cassandra_pid</span><span class="p">,</span> <span class="p">)</span>
+  <span class="n">cassandra_stop_options</span> <span class="o">=</span> <span class="n">cassandra_pid</span>
+  <span class="n">cassandra_startup_script</span> <span class="o">=</span> <span class="s">&quot;/var/lib/cassandra/bin/cassandra&quot;</span>
+  <span class="n">cassandra_stop_script</span> <span class="o">=</span> <span class="s">&quot;/var/lib/cassandra/bin/stop-server&quot;</span>
+  <span class="n">VERSIONS</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="p">)</span>
+  <span class="n">VERSION</span> <span class="o">=</span> <span class="n">VERSIONS</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+  <span class="c">##Cassandra Yaml File based on Version</span>
+  <span class="n">config_11_yaml</span> <span class="o">=</span> <span class="s">&#39;restore-cassandra-1.1.yaml&#39;</span>
+  <span class="n">config_12_yaml</span> <span class="o">=</span> <span class="s">&#39;restore-cassandra-1.2.yaml&#39;</span>
+  <span class="n">config_20_yaml</span> <span class="o">=</span> <span class="s">&#39;restore-cassandra.yaml&#39;</span>
+  
+  <span class="c">##Location Snapshots and Backups are saved</span>
+  <span class="n">backup_dir</span> <span class="o">=</span> <span class="s">&quot;/mnt/backup&quot;</span>
+  <span class="n">log_dir</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">log_format</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">log_level</span> <span class="o">=</span> <span class="mi">30</span>
+  <span class="n">cass_error</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+  <span class="n">auto_snapshot</span> <span class="o">=</span> <span class="bp">True</span>
+  <span class="n">enable_backups</span> <span class="o">=</span> <span class="bp">True</span>
+  <span class="n">backup_hour</span> <span class="o">=</span> <span class="mi">3</span>
+  <span class="c">##Number of Cluster Nodes for Token Generation</span>
+  <span class="n">cluster_num</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="c">##Cassandra HOME</span>
+  <span class="n">cass_home</span> <span class="o">=</span> <span class="s">&quot;/var/lib/cassandra&quot;</span>
+  <span class="n">default_web_port</span> <span class="o">=</span> <span class="mi">8080</span>
+  <span class="n">hostname</span> <span class="o">=</span> <span class="s">&#39;192.168.10.117&#39;</span>
+  
+  <span class="c">#Cassandra YAML properties</span>
+  <span class="n">authenticator</span> <span class="o">=</span> <span class="s">&quot;AllowAllAuthenticator&quot;</span>
+  <span class="c">##authorizer = &quot;org.apache.cassandra.auth.AllowAllAuthority&quot;</span>
+  <span class="n">authorizer</span> <span class="o">=</span> <span class="s">&quot;AllowAllAuthorizer&quot;</span>
+  <span class="n">authority</span> <span class="o">=</span> <span class="s">&quot;org.apache.cassandra.auth.AllowAllAuthority&quot;</span>
+  <span class="n">cluster_name</span> <span class="o">=</span> <span class="s">&quot;Test Cluster&quot;</span>
+  <span class="n">commitlog_directory</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;/var/lib/cassandra/commitlog&quot;</span><span class="p">]</span>
+  <span class="n">compaction_throughput_mb_per_sec</span> <span class="o">=</span> <span class="mi">8</span>
+  <span class="n">data_file_directories</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;/var/lib/cassandra/data&quot;</span><span class="p">]</span>
+  <span class="n">endpoint_snitch</span> <span class="o">=</span> <span class="s">&quot;SimpleSnitch&quot;</span>
+  <span class="c">##endpoint_snitch = &quot;org.apache.cassandra.locator.Ec2Snitch&quot;</span>
+  <span class="n">hinted_handoff_throttle_in_kb</span> <span class="o">=</span> <span class="mi">1024</span>
+  <span class="n">in_memory_compaction_limit_in_mb</span> <span class="o">=</span> <span class="mi">128</span>
+  <span class="n">stream_throughput_outbound_megabits_per_sec</span> <span class="o">=</span> <span class="mi">400</span>
+  <span class="n">incremental_backups</span> <span class="o">=</span> <span class="bp">True</span>
+  <span class="n">memtable_total_space_in_mb</span> <span class="o">=</span> <span class="mi">1024</span>
+  <span class="n">jmx_port</span> <span class="o">=</span> <span class="mi">7199</span>
+  <span class="n">storage_port</span> <span class="o">=</span> <span class="mi">7000</span>
+  <span class="n">saved_caches_directory</span> <span class="o">=</span> <span class="s">&quot;/var/lib/cassandra/saved_caches&quot;</span>
+  <span class="n">max_hint_window_in_ms</span> <span class="o">=</span> <span class="mi">8</span>
+  <span class="n">partitioner</span> <span class="o">=</span> <span class="s">&quot;org.apache.cassandra.dht.RandomPartitioner&quot;</span>
+  <span class="n">rpc_port</span> <span class="o">=</span> <span class="mi">9160</span>
+  <span class="n">seed_provider</span> <span class="o">=</span> <span class="s">&#39;ubuntu-guest1&#39;</span>
+  <span class="n">seeds</span> <span class="o">=</span> <span class="s">&#39;192.168.1.117&#39;</span>
+  <span class="n">ssl_storage_port</span> <span class="o">=</span> <span class="mi">7001</span>
+  <span class="n">num_nodes</span> <span class="o">=</span> <span class="mi">2</span>
+  
+  
+  <span class="c">#Cassandra Environment SEttings</span>
+  <span class="n">heap_newgen_size</span> <span class="o">=</span> <span class="s">&quot;1G&quot;</span>
+  <span class="n">max_heap_size</span> <span class="o">=</span> <span class="s">&quot;2G&quot;</span>
+  <span class="n">backup_location</span> <span class="o">=</span> <span class="s">&quot;backup&quot;</span>
+  <span class="n">max_direct_memory</span> <span class="o">=</span> <span class="s">&quot;5G&quot;</span>
+  
+  <span class="c">#Unused Config Options</span>
+  <span class="n">permissions_validity_in_ms</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">column_index_size_in_kb</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">commitlog_segment_size_in_mb</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">commitlog_sync</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">commitlog_sync_period_in_ms</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">compaction_preheat_key_cache</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">concurrent_reads</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">concurrent_writes</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">cross_node_timeout</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">disk_failure_policy</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">dynamic_snitch_badness_threshold</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">dynamic_snitch_reset_interval_in_ms</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">dynamic_snitch_update_interval_in_ms</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">flush_largest_memtables_at</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">hinted_handoff_enabled</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">index_interval</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">internode_compression</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">key_cache_save_period</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">key_cache_size_in_mb</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">memtable_flush_queue_size</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">multithreaded_compaction</span> <span class="o">=</span> <span class="bp">False</span>
+  <span class="n">range_rpc_timeout_in_ms</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">read_rpc_timeout_in_ms</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">reduce_cache_capacity_to</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">reduce_cache_sizes_at</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">request_scheduler</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">row_cache_provider</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">row_cache_save_period</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">row_cache_size_in_mb</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">row_cache_keys_to_save</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">rpc_address</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">rpc_keepalive</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">rpc_server_type</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">rpc_timeout_in_ms</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">server_encryption_options</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">snapshot_before_compaction</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">start_native_transport</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">start_rpc</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">thrift_framed_transport_size_in_mb</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">thrift_max_message_length_in_mb</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">trickle_fsync</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">trickle_fsync_interval_in_kb</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">truncate_rpc_timeout_in_ms</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">write_rpc_timeout_in_ms</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">restore_snapshot</span> <span class="o">=</span> <span class="bp">None</span>
+  <span class="n">client_encryption_options</span> <span class="o">=</span> <span class="bp">None</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Hector 0.1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../settings.html" >settings</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sean McCully.
+    </div>
+  </body>
+</html>

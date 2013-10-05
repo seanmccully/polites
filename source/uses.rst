@@ -7,7 +7,7 @@ Using Hector from the Command Line::
            optional arguments:
              -h, --help            show this help message and exit
              --command COMMAND     agent command to run ['server', 'tune', 'restore',
-                                   'snapshot']
+                                   'snapshot', 'client']
              --conf CONF           where to load configuration data
              --cass-conf CASS_CONF
                                    configuration to tune cassandra
@@ -47,3 +47,13 @@ The snapshot commmand performs the snapshot action using the current configurati
 The Server command starts the Hector Agent processes.::
 
         $ hector --command server
+
+The Client Command Allows for making HTTP Commands to the configured hector server. If the supplementary command to client is supplied, the default status command is used. Restore uses the last-snapshot result.::
+
+        $ hector --command client ['status', 'restart', 'snapshot', 'restore']
+        <xml><status>Running</status></xml>
+        <xml><auto-snapshot>True</auto-snapshot><last-snapshot>1381067808927</last-snapshot></xml>
+
+
+
+:doc:`contact`

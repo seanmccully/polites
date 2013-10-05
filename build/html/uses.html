@@ -61,7 +61,7 @@
    optional arguments:
      -h, --help            show this help message and exit
      --command COMMAND     agent command to run ['server', 'tune', 'restore',
-                           'snapshot']
+                           'snapshot', 'client']
      --conf CONF           where to load configuration data
      --cass-conf CASS_CONF
                            configuration to tune cassandra
@@ -92,6 +92,12 @@ Should exist and be a compressed tar file of a backup or snapshot keyspaces</pre
 <p>The Server command starts the Hector Agent processes.:</p>
 <div class="highlight-python"><pre>$ hector --command server</pre>
 </div>
+<p>The Client Command Allows for making HTTP Commands to the configured hector server. If the supplementary command to client is supplied, the default status command is used. Restore uses the last-snapshot result.:</p>
+<div class="highlight-python"><pre>$ hector --command client ['status', 'restart', 'snapshot', 'restore']
+&lt;xml&gt;&lt;status&gt;Running&lt;/status&gt;&lt;/xml&gt;
+&lt;xml&gt;&lt;auto-snapshot&gt;True&lt;/auto-snapshot&gt;&lt;last-snapshot&gt;1381067808927&lt;/last-snapshot&gt;&lt;/xml&gt;</pre>
+</div>
+<p><a class="reference internal" href="contact.html"><em>Contact and Bgs</em></a></p>
 </div>
 </div>
 

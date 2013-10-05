@@ -21,3 +21,5 @@ Optionally to install just the python dependencies. Though you may need to modif
 
 To install pip, consult your distribution documentation on installing python setuptools.
 
+
+:doc:`contact`

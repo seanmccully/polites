@@ -15,7 +15,7 @@
 TOP_DIR=$(cd $(dirname "$0") && pwd)
 USER=$(whoami)
 
-VERSION=2.0.0
+VERSION=2.0.1
 CASSANDRA_VERSION=cassandra-$VERSION
 BACKUP_DIR=/mnt/backup
 INSTALL_PATH=/var/lib/cassandra

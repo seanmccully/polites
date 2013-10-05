@@ -32,6 +32,9 @@ hector Package
     :members:
     :undoc-members:
     :show-inheritance:
+.. autoclass_content:: hector.cassandra
+    :autoclass_content:
+    :autodoc-process-docstring:
 
 :mod:`cassandra_log` Module
 ---------------------------
@@ -44,7 +47,7 @@ hector Package
 :mod:`hector` Module
 --------------------
 
-.. automodule:: hector.hector
+.. automodule:: hector._hector
     :members:
     :undoc-members:
     :show-inheritance:
@@ -57,10 +60,18 @@ hector Package
     :undoc-members:
     :show-inheritance:
 
-Subpackages
------------
+:mod:`client` Module
+-------------------
 
-.. toctree::
+.. automodule:: hector.client
+    :members:
+    :undoc-members:
+    :show-inheritance:
+.. autoclass_content:: hector.client
+    :autoclass_content:
+    :autodoc-process-docstring:
 
-    hector.settings
 
+
+
+:doc:`contact`

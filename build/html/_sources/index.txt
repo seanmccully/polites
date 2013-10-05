@@ -13,6 +13,7 @@ Contents:
    uses
    http
    example
+   contact
 
 
 Indices and tables

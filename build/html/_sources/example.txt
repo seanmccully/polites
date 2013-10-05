@@ -106,3 +106,5 @@ In these cases hector just prints a general error message.::
         at org.apache.cassandra.service.CassandraDaemon.activate(CassandraDaemon.java:447)
         at org.apache.cassandra.service.CassandraDaemon.main(CassandraDaemon.java:490)
 
+
+:doc:`contact`

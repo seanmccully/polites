@@ -80,7 +80,8 @@
 
 <div class="viewcode-block" id="get_cass_log_file"><a class="viewcode-back" href="../../hector.html#hector.cassandra_log.get_cass_log_file">[docs]</a><span class="k">def</span> <span class="nf">get_cass_log_file</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
     <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;[get_cass_log_file] called&quot;</span><span class="p">)</span>
-    <span class="n">log_yaml</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">cass_home</span><span class="p">,</span> <span class="s">&#39;conf&#39;</span><span class="p">,</span> <span class="s">&#39;log4j-server.properties&#39;</span><span class="p">)</span>
+    <span class="n">log_yaml</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">cass_home</span><span class="p">,</span> <span class="s">&#39;conf&#39;</span><span class="p">,</span>
+                            <span class="s">&#39;log4j-server.properties&#39;</span><span class="p">)</span>
     <span class="n">log_file</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">yaml_data</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="n">log_yaml</span><span class="p">)</span>
@@ -104,9 +105,9 @@
         <span class="k">return</span> <span class="n">log_file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">HectorException</span><span class="p">(</span><span class="s">&quot;error finding cassandra log file&quot;</span><span class="p">)</span>
+
 </div>
 <div class="viewcode-block" id="inspect_cass_log"><a class="viewcode-back" href="../../hector.html#hector.cassandra_log.inspect_cass_log">[docs]</a><span class="k">def</span> <span class="nf">inspect_cass_log</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-
     <span class="n">cass_log_file</span> <span class="o">=</span> <span class="n">get_cass_log_file</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">cass_log_file</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cass_log_file</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">None</span>

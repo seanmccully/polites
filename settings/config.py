@@ -33,7 +33,7 @@ cluster_num = 0
 ##Cassandra HOME
 cass_home = "/var/lib/cassandra"
 default_web_port = 8080
-hostname = None
+hostname = 'localhost'
 
 #Cassandra YAML properties
 authenticator = "AllowAllAuthenticator"
@@ -60,7 +60,7 @@ rpc_port = 9160
 seed_provider = None
 seeds = '127.0.0.1'
 ssl_storage_port = 7001
-num_nodes = 1
+num_nodes = 2
 
 
 #Cassandra Environment SEttings

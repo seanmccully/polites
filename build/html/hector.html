@@ -83,6 +83,11 @@
 <dd></dd></dl>
 
 <dl class="function">
+<dt id="hector.agent.is_client">
+<tt class="descclassname">hector.agent.</tt><tt class="descname">is_client</tt><big>(</big><em>args</em>, <em>cassandra</em>, <em>extra</em><big>)</big><a class="reference internal" href="_modules/hector/agent.html#is_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.agent.is_client" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="hector.agent.main">
 <tt class="descclassname">hector.agent.</tt><tt class="descname">main</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/hector/agent.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.agent.main" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -94,7 +99,12 @@
 
 <dl class="function">
 <dt id="hector.agent.parse_args">
-<tt class="descclassname">hector.agent.</tt><tt class="descname">parse_args</tt><big>(</big><em>args</em>, <em>cassandra</em><big>)</big><a class="reference internal" href="_modules/hector/agent.html#parse_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.agent.parse_args" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">hector.agent.</tt><tt class="descname">parse_args</tt><big>(</big><em>args</em>, <em>cassandra</em>, <em>parser</em>, <em>extra</em><big>)</big><a class="reference internal" href="_modules/hector/agent.html#parse_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.agent.parse_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="hector.agent.run">
+<tt class="descclassname">hector.agent.</tt><tt class="descname">run</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/hector/agent.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.agent.run" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -174,6 +184,16 @@
 <dd><p>Clear Snapshots</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="hector.cassandra.Cassandra.commitlog_directory">
+<tt class="descname">commitlog_directory</tt><a class="reference internal" href="_modules/hector/cassandra.html#Cassandra.commitlog_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.cassandra.Cassandra.commitlog_directory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="hector.cassandra.Cassandra.data_file_directories">
+<tt class="descname">data_file_directories</tt><a class="reference internal" href="_modules/hector/cassandra.html#Cassandra.data_file_directories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.cassandra.Cassandra.data_file_directories" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="hector.cassandra.Cassandra.do_restore">
 <tt class="descname">do_restore</tt><big>(</big><em>restore_point</em><big>)</big><a class="reference internal" href="_modules/hector/cassandra.html#Cassandra.do_restore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.cassandra.Cassandra.do_restore" title="Permalink to this definition">¶</a></dt>
@@ -218,8 +238,18 @@ autostart - If true start process if not running</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="hector.cassandra.Cassandra.set_keys">
+<tt class="descname">set_keys</tt><big>(</big><em>yaml_data</em>, <em>key_list</em><big>)</big><a class="reference internal" href="_modules/hector/cassandra.html#Cassandra.set_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.cassandra.Cassandra.set_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="hector.cassandra.Cassandra.setup_key_row_caches">
+<tt class="descname">setup_key_row_caches</tt><big>(</big><em>yaml_data</em>, <em>key_list</em>, <em>pops</em><big>)</big><a class="reference internal" href="_modules/hector/cassandra.html#Cassandra.setup_key_row_caches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.cassandra.Cassandra.setup_key_row_caches" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="hector.cassandra.Cassandra.setup_seeds">
-<tt class="descname">setup_seeds</tt><big>(</big><em>yaml_data</em><big>)</big><a class="reference internal" href="_modules/hector/cassandra.html#Cassandra.setup_seeds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.cassandra.Cassandra.setup_seeds" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">setup_seeds</tt><big>(</big><em>yaml_data</em>, <em>key_list</em>, <em>pops</em><big>)</big><a class="reference internal" href="_modules/hector/cassandra.html#Cassandra.setup_seeds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.cassandra.Cassandra.setup_seeds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set Seeds from configuration</p>
 </dd></dl>
 
@@ -256,6 +286,11 @@ autostart - If true start process if not running</p>
 <dl class="method">
 <dt id="hector.cassandra.Cassandra.update_defaults_1_2">
 <tt class="descname">update_defaults_1_2</tt><big>(</big><em>yaml_data</em>, <em>hostname=None</em><big>)</big><a class="reference internal" href="_modules/hector/cassandra.html#Cassandra.update_defaults_1_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.cassandra.Cassandra.update_defaults_1_2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="hector.cassandra.Cassandra.update_defaults_2_0">
+<tt class="descname">update_defaults_2_0</tt><big>(</big><em>yaml_data</em>, <em>hostname=None</em><big>)</big><a class="reference internal" href="_modules/hector/cassandra.html#Cassandra.update_defaults_2_0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.cassandra.Cassandra.update_defaults_2_0" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update Cassandra Yaml Config defaults with config data</p>
 </dd></dl>
 
@@ -302,8 +337,103 @@ yaml_data - Yaml data to write to config</p>
 <dd></dd></dl>
 
 </div>
-<div class="section" id="hector-module">
-<h2><tt class="xref py py-mod docutils literal"><span class="pre">hector</span></tt> Module<a class="headerlink" href="#hector-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-hector._hector">
+<span id="hector-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">hector</span></tt> Module<a class="headerlink" href="#module-hector._hector" title="Permalink to this headline">¶</a></h2>
+<p>(c) 2013 Sean McCully
+#   Licensed under the Apache License, Version 2.0 (the &#8220;License&#8221;); you may
+#   not use this file except in compliance with the License. You may obtain
+#   a copy of the License at
+#
+#       <a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an &#8220;AS IS&#8221; BASIS, WITHOUT
+#   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#   License for the specific language governing permissions and limitations
+#   under the License.</p>
+<dl class="class">
+<dt id="hector._hector.BaseHector">
+<em class="property">class </em><tt class="descclassname">hector._hector.</tt><tt class="descname">BaseHector</tt><big>(</big><em>cass</em><big>)</big><a class="reference internal" href="_modules/hector/_hector.html#BaseHector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector._hector.BaseHector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">twisted.web.resource.Resource</span></tt></p>
+<p>Base Hector Resource</p>
+<dl class="attribute">
+<dt id="hector._hector.BaseHector.isLeaf">
+<tt class="descname">isLeaf</tt><em class="property"> = True</em><a class="headerlink" href="#hector._hector.BaseHector.isLeaf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hector._hector.Hector">
+<em class="property">class </em><tt class="descclassname">hector._hector.</tt><tt class="descname">Hector</tt><big>(</big><em>cass</em><big>)</big><a class="reference internal" href="_modules/hector/_hector.html#Hector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector._hector.Hector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hector._hector.BaseHector" title="hector._hector.BaseHector"><tt class="xref py py-class docutils literal"><span class="pre">hector._hector.BaseHector</span></tt></a></p>
+<p>Hector Resource, returning status and restarting casandra process</p>
+<dl class="method">
+<dt id="hector._hector.Hector.error_message">
+<tt class="descname">error_message</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/hector/_hector.html#Hector.error_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector._hector.Hector.error_message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="hector._hector.Hector.error_str">
+<tt class="descname">error_str</tt><em class="property"> = '&lt;xml&gt;&lt;status&gt;Stopped&lt;/status&gt;&lt;error&gt;&lt;![CDATA[%s]]&gt;&lt;/error&gt;&lt;/xml&gt;'</em><a class="headerlink" href="#hector._hector.Hector.error_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="hector._hector.Hector.getChild">
+<tt class="descname">getChild</tt><big>(</big><em>name</em>, <em>request</em><big>)</big><a class="reference internal" href="_modules/hector/_hector.html#Hector.getChild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector._hector.Hector.getChild" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="hector._hector.Hector.interpolate_error">
+<tt class="descname">interpolate_error</tt><big>(</big><em>err_msg</em><big>)</big><a class="reference internal" href="_modules/hector/_hector.html#Hector.interpolate_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector._hector.Hector.interpolate_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="hector._hector.Hector.render_GET">
+<tt class="descname">render_GET</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="_modules/hector/_hector.html#Hector.render_GET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector._hector.Hector.render_GET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="hector._hector.Hector.render_POST">
+<tt class="descname">render_POST</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="_modules/hector/_hector.html#Hector.render_POST"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector._hector.Hector.render_POST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="hector._hector.Hector.running_str">
+<tt class="descname">running_str</tt><em class="property"> = '&lt;xml&gt;&lt;status&gt;Running&lt;/status&gt;&lt;/xml&gt;'</em><a class="headerlink" href="#hector._hector.Hector.running_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hector._hector.Restore">
+<em class="property">class </em><tt class="descclassname">hector._hector.</tt><tt class="descname">Restore</tt><big>(</big><em>cass</em><big>)</big><a class="reference internal" href="_modules/hector/_hector.html#Restore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector._hector.Restore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hector._hector.BaseHector" title="hector._hector.BaseHector"><tt class="xref py py-class docutils literal"><span class="pre">hector._hector.BaseHector</span></tt></a></p>
+<p>Restore Resource, restoring from a snapshot</p>
+<dl class="method">
+<dt id="hector._hector.Restore.render_POST">
+<tt class="descname">render_POST</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="_modules/hector/_hector.html#Restore.render_POST"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector._hector.Restore.render_POST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="hector._hector.SnapShot">
+<em class="property">class </em><tt class="descclassname">hector._hector.</tt><tt class="descname">SnapShot</tt><big>(</big><em>cass</em><big>)</big><a class="reference internal" href="_modules/hector/_hector.html#SnapShot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector._hector.SnapShot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hector._hector.BaseHector" title="hector._hector.BaseHector"><tt class="xref py py-class docutils literal"><span class="pre">hector._hector.BaseHector</span></tt></a></p>
+<p>SnapShot Resource, showing latest snapshot, and taking a snapshot</p>
+<dl class="method">
+<dt id="hector._hector.SnapShot.render_GET">
+<tt class="descname">render_GET</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="_modules/hector/_hector.html#SnapShot.render_GET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector._hector.SnapShot.render_GET" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="hector._hector.SnapShot.render_PUT">
+<tt class="descname">render_PUT</tt><big>(</big><em>request</em><big>)</big><a class="reference internal" href="_modules/hector/_hector.html#SnapShot.render_PUT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector._hector.SnapShot.render_PUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-hector.utils">
 <span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt> Module<a class="headerlink" href="#module-hector.utils" title="Permalink to this headline">¶</a></h2>
@@ -319,6 +449,11 @@ yaml_data - Yaml data to write to config</p>
 #   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #   License for the specific language governing permissions and limitations
 #   under the License.</p>
+<dl class="function">
+<dt id="hector.utils.append_jvm_opt">
+<tt class="descclassname">hector.utils.</tt><tt class="descname">append_jvm_opt</tt><big>(</big><em>cass</em><big>)</big><a class="reference internal" href="_modules/hector/utils.html#append_jvm_opt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.utils.append_jvm_opt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="hector.utils.calc_seconds_from_hour">
 <tt class="descclassname">hector.utils.</tt><tt class="descname">calc_seconds_from_hour</tt><big>(</big><em>hour</em><big>)</big><a class="reference internal" href="_modules/hector/utils.html#calc_seconds_from_hour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.utils.calc_seconds_from_hour" title="Permalink to this definition">¶</a></dt>
@@ -385,16 +520,92 @@ yaml_data - Yaml data to write to config</p>
 <dd></dd></dl>
 
 </div>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="hector.settings.html">settings Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="hector.settings.html#config-module"><tt class="docutils literal"><span class="pre">config</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<div class="section" id="client-module">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">client</span></tt> Module<a class="headerlink" href="#client-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-hector.client"></span><p>(c) 2013 Sean McCully
+#   Licensed under the Apache License, Version 2.0 (the &#8220;License&#8221;); you may
+#   not use this file except in compliance with the License. You may obtain
+#   a copy of the License at
+#
+#       <a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an &#8220;AS IS&#8221; BASIS, WITHOUT
+#   WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#   License for the specific language governing permissions and limitations
+#   under the License.</p>
+<dl class="class">
+<dt id="hector.client.HectorClient">
+<em class="property">class </em><tt class="descclassname">hector.client.</tt><tt class="descname">HectorClient</tt><big>(</big><em>config</em>, <em>command=None</em>, <em>func=None</em><big>)</big><a class="reference internal" href="_modules/hector/client.html#HectorClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.client.HectorClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dl class="method">
+<dt id="hector.client.HectorClient.add_cb">
+<tt class="descname">add_cb</tt><big>(</big><em>deferred</em>, <em>callback_func=None</em><big>)</big><a class="reference internal" href="_modules/hector/client.html#HectorClient.add_cb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.client.HectorClient.add_cb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="hector.client.HectorClient.commands">
+<tt class="descname">commands</tt><em class="property"> = ['status', 'restart', 'snapshots', 'restore']</em><a class="headerlink" href="#hector.client.HectorClient.commands" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="hector.client.HectorClient.end">
+<tt class="descname">end</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="_modules/hector/client.html#HectorClient.end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.client.HectorClient.end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="hector.client.HectorClient.error_end">
+<tt class="descname">error_end</tt><big>(</big><em>error</em><big>)</big><a class="reference internal" href="_modules/hector/client.html#HectorClient.error_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.client.HectorClient.error_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="hector.client.HectorClient.headers">
+<tt class="descname">headers</tt><em class="property"> = {'Content-Type': 'application/x-www-form-urlencoded'}</em><a class="headerlink" href="#hector.client.HectorClient.headers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="hector.client.HectorClient.restart">
+<tt class="descname">restart</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/hector/client.html#HectorClient.restart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.client.HectorClient.restart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs Restart.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="hector.client.HectorClient.restore">
+<tt class="descname">restore</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/hector/client.html#HectorClient.restore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.client.HectorClient.restore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts Restore from snapshot.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="hector.client.HectorClient.restore_next">
+<tt class="descname">restore_next</tt><big>(</big><em>response</em><big>)</big><a class="reference internal" href="_modules/hector/client.html#HectorClient.restore_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.client.HectorClient.restore_next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receives response from snapshot command. For Restore Point</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="hector.client.HectorClient.snapshot">
+<tt class="descname">snapshot</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/hector/client.html#HectorClient.snapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.client.HectorClient.snapshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs Restart.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="hector.client.HectorClient.status">
+<tt class="descname">status</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/hector/client.html#HectorClient.status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.client.HectorClient.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets status.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="hector.client.HectorClient.status_callback">
+<tt class="descname">status_callback</tt><big>(</big><em>response</em><big>)</big><a class="reference internal" href="_modules/hector/client.html#HectorClient.status_callback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#hector.client.HectorClient.status_callback" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="hector.client.HectorClient.url">
+<tt class="descname">url</tt><em class="property"> = 'http://%s:%s/%s'</em><a class="headerlink" href="#hector.client.HectorClient.url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p><a class="reference internal" href="contact.html"><em>Contact and Bgs</em></a></p>
 </div>
 </div>
 
@@ -412,11 +623,9 @@ yaml_data - Yaml data to write to config</p>
 <li><a class="reference internal" href="#module-hector.backwards"><tt class="docutils literal"><span class="pre">backwards</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-hector.cassandra"><tt class="docutils literal"><span class="pre">cassandra</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-hector.cassandra_log"><tt class="docutils literal"><span class="pre">cassandra_log</span></tt> Module</a></li>
-<li><a class="reference internal" href="#hector-module"><tt class="docutils literal"><span class="pre">hector</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-hector._hector"><tt class="docutils literal"><span class="pre">hector</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-hector.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
-<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-</ul>
-</li>
+<li><a class="reference internal" href="#client-module"><tt class="docutils literal"><span class="pre">client</span></tt> Module</a></li>
 </ul>
 </li>
 </ul>

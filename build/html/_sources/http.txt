@@ -11,11 +11,14 @@ Hector server command supports the following HTTP Table
 +-------------+-----------+---------------------------------------------------------------------------------------+---------------------------------------------------------------+
 | POST        |   /       | (optional)* restart=True|False                                                        | Start or Restart Process                                      |
 +-------------+-----------+---------------------------------------------------------------------------------------+---------------------------------------------------------------+
-| GET         | /snapshot | <xml><auto-snapshot>T|F</auto-snapshot><last-snapshot>[VALUE]</last-snapshot></xml>   | True if auto-snapshot enabled, and last recored snapshot      |
+| GET         | /snapshot | <xml><auto-snapshot>T|F</auto-snapshot><last-snapshot>[VALUE]</last-snapshot></xml>   | True if auto-snapshot enabled, and last recorded snapshot     |
 +-------------+-----------+---------------------------------------------------------------------------------------+---------------------------------------------------------------+
 | PUT         | /snapshot | <xml><snapshot>True</snapshot></xml>                                                  | Takes a snapshot                                              |
 +-------------+-----------+---------------------------------------------------------------------------------------+---------------------------------------------------------------+
-| POST        | /restore  | snapsot-name=[SNAPSHOT NAME|Backup Name]                                              | Restore from a recorded snapshot or backup with name provided |
+| POST        | /restore  | snapshot-name=[SNAPSHOT NAME|Backup Name]                                             | Restore from a recorded snapshot or backup with name provided |
 +-------------+-----------+---------------------------------------------------------------------------------------+---------------------------------------------------------------+
 | GET         | /docs     |                                                                                       | This documentation!!!!                                        |
 +-------------+-----------+---------------------------------------------------------------------------------------+---------------------------------------------------------------+
+
+
+:doc:`contact`

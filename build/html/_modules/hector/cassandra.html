@@ -83,7 +83,9 @@
 <span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">schedule_task</span>
 <span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">get_backup_hour</span>
 <span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">calc_seconds_from_hour</span>
+<span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">load_config</span>
 <span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">handle_pid</span>
+<span class="kn">from</span> <span class="nn">hector.utils</span> <span class="kn">import</span> <span class="n">append_jvm_opt</span>
 
 <span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
@@ -106,7 +108,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">restored</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cassandra_running</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_defaults</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="n">update_func</span><span class="o">.</span><span class="n">im_func</span><span class="o">.</span><span class="n">func_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__getattribute__</span><span class="p">(</span><span class="n">update_func</span><span class="o">.</span><span class="n">im_func</span><span class="o">.</span><span class="n">func_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">err_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&quot;.* No such file or directory\s*?$&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -115,68 +117,35 @@
 </div>
 <div class="viewcode-block" id="Cassandra.has_been_restored"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.has_been_restored">[docs]</a>    <span class="k">def</span> <span class="nf">has_been_restored</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">restored</span>
-
 </div>
 <div class="viewcode-block" id="Cassandra.update_defaults_1_2"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.update_defaults_1_2">[docs]</a>    <span class="k">def</span> <span class="nf">update_defaults_1_2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_data</span><span class="p">,</span> <span class="n">hostname</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_defaults_2_0</span><span class="p">(</span><span class="n">yaml_data</span><span class="p">,</span> <span class="n">hostname</span><span class="o">=</span><span class="n">hostname</span><span class="p">)</span>
+        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;initial_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_token_gen</span><span class="p">(</span><span class="n">ring_size</span><span class="o">=</span><span class="mi">63</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Cassandra.update_defaults_2_0"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.update_defaults_2_0">[docs]</a>    <span class="k">def</span> <span class="nf">update_defaults_2_0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_data</span><span class="p">,</span> <span class="n">hostname</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Update Cassandra Yaml Config defaults with config data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;[update_defaults_1_2] called&quot;</span><span class="p">)</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;cluster_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cluster_name</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;storage_port&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_port</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;ssl_storage_port&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ssl_storage_port</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;rpc_port&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">rpc_port</span>
+
+        <span class="k">def</span> <span class="nf">pop_key</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+            <span class="n">lst</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">lst</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+
+        <span class="n">key_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
         <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;listen_address&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hostname</span>
         <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;rpc_address&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hostname</span>
         <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;auto_bootstrap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_been_restored</span><span class="p">()</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;saved_caches_directory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">saved_caches_directory</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;commitlog_directory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">commitlog_directory</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;data_file_directories&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">data_file_directories</span><span class="p">]</span>
         <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;incremental_backups&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backups_enabled</span><span class="p">()</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;endpoint_snitch&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">endpoint_snitch</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cluster_num</span><span class="p">:</span>
+            <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;initial_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_token_gen</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">:</span>
+            <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;num_tokens&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">num_nodes</span>
 
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;in_memory_compaction_limit_in_mb&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">in_memory_compaction_limit_in_mb</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_seeds</span><span class="p">(</span><span class="n">yaml_data</span><span class="p">,</span> <span class="n">key_list</span><span class="p">,</span> <span class="n">pop_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_key_row_caches</span><span class="p">(</span><span class="n">yaml_data</span><span class="p">,</span> <span class="n">key_list</span><span class="p">,</span> <span class="n">pop_key</span><span class="p">)</span>
 
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;compaction_throughput_mb_per_sec&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">compaction_throughput_mb_per_sec</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;partitioner&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">partitioner</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;memtable_total_space_in_mb&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">memtable_total_space_in_mb</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;stream_throughput_outbound_megabits_per_sec&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">stream_throughput_outbound_megabits_per_sec</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;multithreaded_compaction&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">multithreaded_compaction</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;max_hint_window_in_ms&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_hint_window_in_ms</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;hinted_handoff_throttle_in_kb&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">hinted_handoff_throttle_in_kb</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;authenticator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">authenticator</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;authorizer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">authorizer</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;initial_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_token_gen</span><span class="p">()</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;num_tokens&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">num_nodes</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">setup_seeds</span><span class="p">(</span><span class="n">yaml_data</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">key_cache_size_in_mb</span><span class="p">:</span>
-            <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;key_cache_size_in_mb&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">key_cache_size_in_mb</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">key_cache_keys_to_save</span><span class="p">:</span>
-                <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;key_cache_keys_to_save&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">key_cache_keys_to_save</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">row_cache_size_in_mb</span><span class="p">:</span>
-            <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;row_cache_size_in_mb&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">row_cache_size_in_mb</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">row_cache_keys_to_save</span><span class="p">:</span>
-                <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;row_cache_keys_to_save&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">row_cache_keys_to_save</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">yaml_data</span><span class="p">,</span> <span class="n">key_list</span><span class="p">)</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;[update_defaults_1_2] leaving&quot;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="Cassandra.update_defaults_1_1"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.update_defaults_1_1">[docs]</a>    <span class="k">def</span> <span class="nf">update_defaults_1_1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_data</span><span class="p">,</span> <span class="n">hostname</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
@@ -184,67 +153,51 @@
 <span class="sd">            Update Cassandra Yaml Config defaults with config data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="k">def</span> <span class="nf">pop_key</span><span class="p">(</span><span class="n">lst</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+            <span class="n">lst</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">lst</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+
+        <span class="n">key_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;[update_defaults_1_1] called&quot;</span><span class="p">)</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;cluster_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cluster_name</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;storage_port&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">storage_port</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;ssl_storage_port&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ssl_storage_port</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;rpc_port&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">rpc_port</span>
         <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;listen_address&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hostname</span>
         <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;rpc_address&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hostname</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;saved_caches_directory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">saved_caches_directory</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;commitlog_directory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">commitlog_directory</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;data_file_directories&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">data_file_directories</span><span class="p">]</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;incremental_backups&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backups_enabled</span><span class="p">()</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;endpoint_snitch&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">endpoint_snitch</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;in_memory_compaction_limit_in_mb&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">in_memory_compaction_limit_in_mb</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;compaction_throughput_mb_per_sec&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">compaction_throughput_mb_per_sec</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;partitioner&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">partitioner</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;memtable_total_space_in_mb&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">memtable_total_space_in_mb</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;stream_throughput_outbound_megabits_per_sec&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">stream_throughput_outbound_megabits_per_sec</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;multithreaded_compaction&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">multithreaded_compaction</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;max_hint_window_in_ms&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_hint_window_in_ms</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;hinted_handoff_throttle_in_kb&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">hinted_handoff_throttle_in_kb</span>
-
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;authenticator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">authenticator</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;authority&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">authority</span>
-        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;initial_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_token_gen</span><span class="p">(</span><span class="n">ring_size</span><span class="o">=</span><span class="mi">127</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">setup_seeds</span><span class="p">(</span><span class="n">yaml_data</span><span class="p">)</span>
-
+        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;initial_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_token_gen</span><span class="p">()</span>
+        <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;num_tokens&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">num_nodes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_key_row_caches</span><span class="p">(</span><span class="n">yaml_data</span><span class="p">,</span> <span class="n">key_list</span><span class="p">,</span> <span class="n">pop_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_seeds</span><span class="p">(</span><span class="n">yaml_data</span><span class="p">,</span> <span class="n">key_list</span><span class="p">,</span> <span class="n">pop_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">yaml_data</span><span class="p">,</span> <span class="n">key_list</span><span class="p">)</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;[update_defaults_1_1] leaving&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Cassandra.set_keys"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.set_keys">[docs]</a>    <span class="k">def</span> <span class="nf">set_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_data</span><span class="p">,</span> <span class="n">key_list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">key_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">yaml_data</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="n">yaml_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="Cassandra.setup_key_row_caches"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.setup_key_row_caches">[docs]</a>    <span class="k">def</span> <span class="nf">setup_key_row_caches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_data</span><span class="p">,</span> <span class="n">key_list</span><span class="p">,</span> <span class="n">pops</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">key_cache_size_in_mb</span><span class="p">:</span>
-            <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;key_cache_size_in_mb&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">key_cache_size_in_mb</span>
+            <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;key_cache_size_in_mb&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">key_cache_size_in_mb</span>
+            <span class="n">pops</span><span class="p">(</span><span class="n">key_list</span><span class="p">,</span> <span class="s">&#39;key_cache_size_in_mb&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">key_cache_keys_to_save</span><span class="p">:</span>
                 <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;key_cache_keys_to_save&#39;</span><span class="p">]</span> <span class="o">=</span> \
                     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">key_cache_keys_to_save</span>
+                <span class="n">pops</span><span class="p">(</span><span class="n">key_list</span><span class="p">,</span> <span class="s">&#39;key_cache_keys_to_save&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">row_cache_size_in_mb</span><span class="p">:</span>
-            <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;row_cache_size_in_mb&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">row_cache_size_in_mb</span>
+            <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;row_cache_size_in_mb&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">row_cache_size_in_mb</span>
+            <span class="n">pops</span><span class="p">(</span><span class="n">key_list</span><span class="p">,</span> <span class="s">&#39;key_cache_size_in_mb&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">row_cache_keys_to_save</span><span class="p">:</span>
                 <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;row_cache_keys_to_save&#39;</span><span class="p">]</span> <span class="o">=</span> \
                     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">row_cache_keys_to_save</span>
-
-        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;[update_defaults_1_1] leaving&quot;</span><span class="p">)</span>
-
+                <span class="n">pops</span><span class="p">(</span><span class="n">key_list</span><span class="p">,</span> <span class="s">&#39;row_cache_keys_to_save&#39;</span><span class="p">)</span>
 </div>
-<div class="viewcode-block" id="Cassandra.setup_seeds"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.setup_seeds">[docs]</a>    <span class="k">def</span> <span class="nf">setup_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_data</span><span class="p">):</span>
+<div class="viewcode-block" id="Cassandra.setup_seeds"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.setup_seeds">[docs]</a>    <span class="k">def</span> <span class="nf">setup_seeds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yaml_data</span><span class="p">,</span> <span class="n">key_list</span><span class="p">,</span> <span class="n">pops</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Set Seeds from configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;seed_provider&#39;</span><span class="p">]:</span>
+                <span class="n">pops</span><span class="p">(</span><span class="n">key_list</span><span class="p">,</span> <span class="s">&#39;seed_provider&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seed_provider</span><span class="p">:</span>
                     <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;seed_provider&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s">&#39;class_name&#39;</span><span class="p">]</span> <span class="o">=</span> \
                         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seed_provider</span>
@@ -252,11 +205,11 @@
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seeds</span><span class="p">:</span>
                     <span class="n">seed_provider</span> <span class="o">=</span> <span class="n">yaml_data</span><span class="p">[</span><span class="s">&#39;seed_provider&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">seed_provider</span><span class="p">[</span><span class="s">&#39;parameters&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s">&#39;seeds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seeds</span>
+                    <span class="n">pops</span><span class="p">(</span><span class="n">key_list</span><span class="p">,</span> <span class="s">&#39;seeds&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s">&quot;[setup_seeds] Not able to set seed provider&quot;</span><span class="p">)</span>
-
 </div>
-    <span class="k">def</span> <span class="nf">_token_gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ring_size</span><span class="o">=</span><span class="mi">63</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_token_gen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ring_size</span><span class="o">=</span><span class="mi">127</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cluster_num</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">ring_size</span><span class="p">)</span>
                    <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span>
 
@@ -284,6 +237,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">False</span>
 </div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Cassandra.commitlog_directory"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.commitlog_directory">[docs]</a>    <span class="k">def</span> <span class="nf">commitlog_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">commitlog_directory</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">commitlog_directory</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">commitlog_directory</span>
+</div>
 <div class="viewcode-block" id="Cassandra.modify_environment"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.modify_environment">[docs]</a>    <span class="k">def</span> <span class="nf">modify_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Modify environment with config</span>
@@ -292,8 +252,8 @@
         <span class="n">env</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">new_env_vars</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;HEAP_NEWSIZE&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">heap_newgen_size</span><span class="p">,</span>
                         <span class="s">&quot;MAX_HEAP_SIZE&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_heap_size</span><span class="p">,</span>
-                        <span class="s">&quot;DATA_DIR&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">data_file_directories</span><span class="p">,</span>
-                        <span class="s">&quot;COMMIT_LOG_DIR&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">commitlog_directory</span><span class="p">,</span>
+                        <span class="s">&quot;DATA_DIR&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_file_directories</span><span class="p">,</span>
+                        <span class="s">&quot;COMMIT_LOG_DIR&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">commitlog_directory</span><span class="p">,</span>
                         <span class="s">&quot;LOCAL_BACKUP_DIR&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">backup_location</span><span class="p">,</span>
                         <span class="s">&quot;CACHE_DIR&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">saved_caches_directory</span><span class="p">,</span>
                         <span class="s">&quot;JMX_PORT&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">jmx_port</span><span class="p">),</span>
@@ -307,6 +267,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Run a cassandra command</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">jvm_err</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;The stack size specified is too small,&quot;</span> <span class="o">+</span>
+                   <span class="s">&quot; Specify at least 228k&quot;</span><span class="p">)</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;[_run_command] called with command [</span><span class="si">%s</span><span class="s">]&quot;</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">use_su</span><span class="p">:</span>
             <span class="n">commands</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">su_command</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">)</span>
@@ -321,13 +283,15 @@
                                   <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s">&quot;[_run_command] error running command [</span><span class="si">%s</span><span class="s">] [</span><span class="si">%s</span><span class="s">]&quot;</span><span class="p">,</span>
-                         <span class="n">command</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+                             <span class="n">command</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">None</span>
 
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
         <span class="n">ps</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;[_run_command] output [</span><span class="si">%s</span><span class="s">]&quot;</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="n">jvm_err</span> <span class="ow">in</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">append_jvm_opt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="k">return</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">output</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -348,12 +312,12 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_safe_start</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">last_safe_start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_safe_start</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="nb">reload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">cass_error_msg</span> <span class="o">=</span> <span class="n">inspect_cass_log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s">&quot;[start_cassandra] can&#39;t &quot;</span> <span class="o">+</span>
-                             <span class="s">&quot;start cassandra check config.py&quot;</span><span class="p">)</span>
+                                 <span class="s">&quot;start cassandra check config.py&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">cass_error_msg</span> <span class="o">=</span> <span class="s">&quot;cassandra doesn&#39;t start, no log error&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">do_tune</span><span class="p">()</span>
@@ -384,7 +348,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_run_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cassandra_running</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="k">return</span> <span class="bp">True</span>
-
 </div>
 <div class="viewcode-block" id="Cassandra.safe_start_cassandra"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.safe_start_cassandra">[docs]</a>    <span class="k">def</span> <span class="nf">safe_start_cassandra</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -420,7 +383,7 @@
 <span class="sd">            Run a cassandra nodetool command</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">command</span> <span class="o">=</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">cass_home</span><span class="p">,</span> <span class="s">&#39;bin&#39;</span><span class="p">,</span> <span class="s">&#39;nodetool&#39;</span><span class="p">)</span> <span class="o">+</span>
-                  <span class="s">&#39; -h </span><span class="si">%s</span><span class="s"> -p </span><span class="si">%d</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">jmx_port</span><span class="p">,</span> <span class="n">command_option</span><span class="p">,</span> <span class="p">))</span>
+                   <span class="s">&#39; -h </span><span class="si">%s</span><span class="s"> -p </span><span class="si">%d</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">jmx_port</span><span class="p">,</span> <span class="n">command_option</span><span class="p">,</span> <span class="p">))</span>
         <span class="k">return</span> <span class="n">command</span>
 
     <span class="k">def</span> <span class="nf">_match_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">match</span><span class="p">):</span>
@@ -447,7 +410,7 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear_snapshot</span><span class="p">():</span>
             <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node_tool_command</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_hostname</span><span class="p">(),</span>
-                      <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">jmx_port</span><span class="p">,</span> <span class="s">&#39;snapshot&#39;</span><span class="p">)</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">jmx_port</span><span class="p">,</span> <span class="s">&#39;snapshot&#39;</span><span class="p">)</span>
             <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">output</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">False</span>
@@ -465,7 +428,6 @@
 
         <span class="k">return</span> <span class="n">schedule_task</span><span class="p">(</span><span class="n">calc_seconds_from_hour</span><span class="p">(</span>
                              <span class="n">get_backup_hour</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">take_backup</span><span class="p">)</span>
-
 </div>
     <span class="k">def</span> <span class="nf">_get_hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -477,7 +439,6 @@
 
         <span class="k">return</span> <span class="n">hostname</span>
 
-
 <div class="viewcode-block" id="Cassandra.clear_snapshot"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.clear_snapshot">[docs]</a>    <span class="k">def</span> <span class="nf">clear_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Clear Snapshots</span>
@@ -488,23 +449,30 @@
                                           <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">jmx_port</span><span class="p">,</span>
                                           <span class="s">&#39;clearsnapshot&#39;</span><span class="p">)</span>
         <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">output</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">False</span>
-        <span class="n">command_success</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;^Requested clearing? snapshot for:&#39;</span><span class="p">)</span>
-        <span class="n">command_success</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;^Requested( clearing)? snapshot for:&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">output</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_match_output</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">),</span> <span class="n">command_success</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">command_success</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&#39;^Requested( &#39;</span> <span class="o">+</span>
+                                         <span class="s">&#39;clearing)? snapshot for:&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_match_output</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">),</span> <span class="n">command_success</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">True</span>
 
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;[clear_snapshot] leaving&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">False</span>
+</div>
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="Cassandra.data_file_directories"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.data_file_directories">[docs]</a>    <span class="k">def</span> <span class="nf">data_file_directories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">data_file_directories</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">data_file_directories</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">data_file_directories</span>
 </div>
 <div class="viewcode-block" id="Cassandra.take_backup"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.take_backup">[docs]</a>    <span class="k">def</span> <span class="nf">take_backup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backup_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Collect incremental backups and compress</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;[take_backup] called&quot;</span><span class="p">)</span>
-        <span class="n">data_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">data_file_directories</span>
+        <span class="n">data_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_file_directories</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="n">data_dir</span> <span class="o">=</span> <span class="n">data_dir</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">backup_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">backup_dir</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">backup_name</span><span class="p">:</span>
@@ -531,7 +499,9 @@
             <span class="n">snapshot_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_snapshot</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;[verify_snapshot] snapshot_name [</span><span class="si">%s</span><span class="s">]&quot;</span><span class="p">,</span> <span class="n">snapshot_name</span><span class="p">)</span>
 
-        <span class="n">data_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">data_file_directories</span>
+        <span class="n">data_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_file_directories</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="n">data_dir</span> <span class="o">=</span> <span class="n">data_dir</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">backup_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">backup_dir</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
             <span class="n">tar_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">backup_dir</span><span class="p">,</span> <span class="n">snapshot_name</span> <span class="o">+</span> <span class="s">&#39;.tar.gz&#39;</span><span class="p">)</span>
@@ -551,13 +521,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;[do_restore] called with restore_poit [</span><span class="si">%s</span><span class="s">]&quot;</span><span class="p">,</span>
                      <span class="n">restore_point</span><span class="p">)</span>
+        <span class="n">commit_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commitlog_directory</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_cassandra</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">commitlog_directory</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">commit_dir</span><span class="p">):</span>
                 <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;[do_restore] Removing commitlog [</span><span class="si">%s</span><span class="s">]&quot;</span><span class="p">,</span>
-                          <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">commitlog_directory</span><span class="p">)</span>
-                <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">commitlog_directory</span><span class="p">):</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">commitlog_directory</span><span class="p">,</span>
-                                           <span class="nb">file</span><span class="p">))</span>
+                             <span class="n">commit_dir</span><span class="p">)</span>
+                <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">commit_dir</span><span class="p">):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">commit_dir</span><span class="p">,</span> <span class="nb">file</span><span class="p">))</span>
 
             <span class="n">snapshot_file</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">restore_point</span><span class="p">,</span> <span class="s">&#39;r:gz&#39;</span><span class="p">)</span>
             <span class="n">snapshot_name</span> <span class="o">=</span> <span class="n">snapshot_file</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -596,7 +566,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">restored</span> <span class="o">=</span> <span class="bp">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">do_tune</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">safe_start_cassandra</span><span class="p">()</span>
-
 </div>
 <div class="viewcode-block" id="Cassandra.find_snapshot"><a class="viewcode-back" href="../../hector.html#hector.cassandra.Cassandra.find_snapshot">[docs]</a>    <span class="k">def</span> <span class="nf">find_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
