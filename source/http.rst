@@ -1,8 +1,8 @@
-Hector - HTTP Guide
+Polites - HTTP Guide
 ===================
 
 
-Hector server command supports the following HTTP Table
+Polites server command supports the following HTTP Table
 
 +-------------+-----------+---------------------------------------------------------------------------------------+---------------------------------------------------------------+
 | HTTP Method | HTTP Path | Request Args/Response Data                                                            | Description                                                   |

@@ -1,0 +1,595 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>settings Package &mdash; Polites 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Polites 0.1 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">Polites 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="settings-package">
+<h1>settings Package<a class="headerlink" href="#settings-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-settings.config">
+<span id="config-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">config</span></tt> Module<a class="headerlink" href="#module-settings.config" title="Permalink to this headline">¶</a></h2>
+<p>(c) 2013 Sean McCully
+Licenced under the Apache License, 2.0: <a class="reference external" href="http://opensource.org/licenses/apache2.0.php">http://opensource.org/licenses/apache2.0.php</a></p>
+<dl class="class">
+<dt id="settings.config.Polites">
+<em class="property">class </em><tt class="descclassname">settings.config.</tt><tt class="descname">Polites</tt><a class="reference internal" href="_modules/settings/config.html#Polites"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#settings.config.Polites" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="settings.config.Polites.VERSION">
+<tt class="descname">VERSION</tt><em class="property"> = 2.0</em><a class="headerlink" href="#settings.config.Polites.VERSION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.VERSIONS">
+<tt class="descname">VERSIONS</tt><em class="property"> = (1.1, 1.2, 2.0)</em><a class="headerlink" href="#settings.config.Polites.VERSIONS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.authenticator">
+<tt class="descname">authenticator</tt><em class="property"> = 'AllowAllAuthenticator'</em><a class="headerlink" href="#settings.config.Polites.authenticator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.authority">
+<tt class="descname">authority</tt><em class="property"> = 'org.apache.cassandra.auth.AllowAllAuthority'</em><a class="headerlink" href="#settings.config.Polites.authority" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.authorizer">
+<tt class="descname">authorizer</tt><em class="property"> = 'AllowAllAuthorizer'</em><a class="headerlink" href="#settings.config.Polites.authorizer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.auto_snapshot">
+<tt class="descname">auto_snapshot</tt><em class="property"> = True</em><a class="headerlink" href="#settings.config.Polites.auto_snapshot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.backup_dir">
+<tt class="descname">backup_dir</tt><em class="property"> = '/mnt/backup'</em><a class="headerlink" href="#settings.config.Polites.backup_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.backup_hour">
+<tt class="descname">backup_hour</tt><em class="property"> = 3</em><a class="headerlink" href="#settings.config.Polites.backup_hour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.backup_location">
+<tt class="descname">backup_location</tt><em class="property"> = 'backup'</em><a class="headerlink" href="#settings.config.Polites.backup_location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.cass_error">
+<tt class="descname">cass_error</tt><em class="property"> = ''</em><a class="headerlink" href="#settings.config.Polites.cass_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.cass_home">
+<tt class="descname">cass_home</tt><em class="property"> = '/var/lib/cassandra'</em><a class="headerlink" href="#settings.config.Polites.cass_home" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.cassandra_pid">
+<tt class="descname">cassandra_pid</tt><em class="property"> = ('/', 'var', 'lib', 'cassandra', 'cassandra.pid')</em><a class="headerlink" href="#settings.config.Polites.cassandra_pid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.cassandra_process_name">
+<tt class="descname">cassandra_process_name</tt><em class="property"> = 'CassandraDaemon'</em><a class="headerlink" href="#settings.config.Polites.cassandra_process_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.cassandra_start_options">
+<tt class="descname">cassandra_start_options</tt><em class="property"> = ('-p', ('/', 'var', 'lib', 'cassandra', 'cassandra.pid'))</em><a class="headerlink" href="#settings.config.Polites.cassandra_start_options" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.cassandra_startup_script">
+<tt class="descname">cassandra_startup_script</tt><em class="property"> = '/var/lib/cassandra/bin/cassandra'</em><a class="headerlink" href="#settings.config.Polites.cassandra_startup_script" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.cassandra_stop_options">
+<tt class="descname">cassandra_stop_options</tt><em class="property"> = ('/', 'var', 'lib', 'cassandra', 'cassandra.pid')</em><a class="headerlink" href="#settings.config.Polites.cassandra_stop_options" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.cassandra_stop_script">
+<tt class="descname">cassandra_stop_script</tt><em class="property"> = '/var/lib/cassandra/bin/stop-server'</em><a class="headerlink" href="#settings.config.Polites.cassandra_stop_script" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.cassandra_user">
+<tt class="descname">cassandra_user</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.cassandra_user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.client_encryption_options">
+<tt class="descname">client_encryption_options</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.client_encryption_options" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.cluster_name">
+<tt class="descname">cluster_name</tt><em class="property"> = 'Test Cluster'</em><a class="headerlink" href="#settings.config.Polites.cluster_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.cluster_num">
+<tt class="descname">cluster_num</tt><em class="property"> = 0</em><a class="headerlink" href="#settings.config.Polites.cluster_num" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.column_index_size_in_kb">
+<tt class="descname">column_index_size_in_kb</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.column_index_size_in_kb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.commitlog_directory">
+<tt class="descname">commitlog_directory</tt><em class="property"> = ['/var/lib/cassandra/commitlog']</em><a class="headerlink" href="#settings.config.Polites.commitlog_directory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.commitlog_segment_size_in_mb">
+<tt class="descname">commitlog_segment_size_in_mb</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.commitlog_segment_size_in_mb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.commitlog_sync">
+<tt class="descname">commitlog_sync</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.commitlog_sync" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.commitlog_sync_period_in_ms">
+<tt class="descname">commitlog_sync_period_in_ms</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.commitlog_sync_period_in_ms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.compaction_preheat_key_cache">
+<tt class="descname">compaction_preheat_key_cache</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.compaction_preheat_key_cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.compaction_throughput_mb_per_sec">
+<tt class="descname">compaction_throughput_mb_per_sec</tt><em class="property"> = 8</em><a class="headerlink" href="#settings.config.Polites.compaction_throughput_mb_per_sec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.concurrent_reads">
+<tt class="descname">concurrent_reads</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.concurrent_reads" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.concurrent_writes">
+<tt class="descname">concurrent_writes</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.concurrent_writes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.config_11_yaml">
+<tt class="descname">config_11_yaml</tt><em class="property"> = 'restore-cassandra-1.1.yaml'</em><a class="headerlink" href="#settings.config.Polites.config_11_yaml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.config_12_yaml">
+<tt class="descname">config_12_yaml</tt><em class="property"> = 'restore-cassandra-1.2.yaml'</em><a class="headerlink" href="#settings.config.Polites.config_12_yaml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.config_20_yaml">
+<tt class="descname">config_20_yaml</tt><em class="property"> = 'restore-cassandra.yaml'</em><a class="headerlink" href="#settings.config.Polites.config_20_yaml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.cross_node_timeout">
+<tt class="descname">cross_node_timeout</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.cross_node_timeout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.data_file_directories">
+<tt class="descname">data_file_directories</tt><em class="property"> = ['/var/lib/cassandra/data']</em><a class="headerlink" href="#settings.config.Polites.data_file_directories" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.default_web_port">
+<tt class="descname">default_web_port</tt><em class="property"> = 8080</em><a class="headerlink" href="#settings.config.Polites.default_web_port" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.disk_failure_policy">
+<tt class="descname">disk_failure_policy</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.disk_failure_policy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.dynamic_snitch_badness_threshold">
+<tt class="descname">dynamic_snitch_badness_threshold</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.dynamic_snitch_badness_threshold" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.dynamic_snitch_reset_interval_in_ms">
+<tt class="descname">dynamic_snitch_reset_interval_in_ms</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.dynamic_snitch_reset_interval_in_ms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.dynamic_snitch_update_interval_in_ms">
+<tt class="descname">dynamic_snitch_update_interval_in_ms</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.dynamic_snitch_update_interval_in_ms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.enable_backups">
+<tt class="descname">enable_backups</tt><em class="property"> = True</em><a class="headerlink" href="#settings.config.Polites.enable_backups" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.endpoint_snitch">
+<tt class="descname">endpoint_snitch</tt><em class="property"> = 'SimpleSnitch'</em><a class="headerlink" href="#settings.config.Polites.endpoint_snitch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.flush_largest_memtables_at">
+<tt class="descname">flush_largest_memtables_at</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.flush_largest_memtables_at" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.heap_newgen_size">
+<tt class="descname">heap_newgen_size</tt><em class="property"> = '1G'</em><a class="headerlink" href="#settings.config.Polites.heap_newgen_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.hinted_handoff_enabled">
+<tt class="descname">hinted_handoff_enabled</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.hinted_handoff_enabled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.hinted_handoff_throttle_in_kb">
+<tt class="descname">hinted_handoff_throttle_in_kb</tt><em class="property"> = 1024</em><a class="headerlink" href="#settings.config.Polites.hinted_handoff_throttle_in_kb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.hostname">
+<tt class="descname">hostname</tt><em class="property"> = 'localhost'</em><a class="headerlink" href="#settings.config.Polites.hostname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.in_memory_compaction_limit_in_mb">
+<tt class="descname">in_memory_compaction_limit_in_mb</tt><em class="property"> = 128</em><a class="headerlink" href="#settings.config.Polites.in_memory_compaction_limit_in_mb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.incremental_backups">
+<tt class="descname">incremental_backups</tt><em class="property"> = True</em><a class="headerlink" href="#settings.config.Polites.incremental_backups" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.index_interval">
+<tt class="descname">index_interval</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.index_interval" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.internode_compression">
+<tt class="descname">internode_compression</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.internode_compression" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.jmx_port">
+<tt class="descname">jmx_port</tt><em class="property"> = 7199</em><a class="headerlink" href="#settings.config.Polites.jmx_port" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.key_cache_save_period">
+<tt class="descname">key_cache_save_period</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.key_cache_save_period" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.key_cache_size_in_mb">
+<tt class="descname">key_cache_size_in_mb</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.key_cache_size_in_mb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.log_dir">
+<tt class="descname">log_dir</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.log_dir" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.log_format">
+<tt class="descname">log_format</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.log_format" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.log_level">
+<tt class="descname">log_level</tt><em class="property"> = 30</em><a class="headerlink" href="#settings.config.Polites.log_level" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.max_direct_memory">
+<tt class="descname">max_direct_memory</tt><em class="property"> = '5G'</em><a class="headerlink" href="#settings.config.Polites.max_direct_memory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.max_heap_size">
+<tt class="descname">max_heap_size</tt><em class="property"> = '2G'</em><a class="headerlink" href="#settings.config.Polites.max_heap_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.max_hint_window_in_ms">
+<tt class="descname">max_hint_window_in_ms</tt><em class="property"> = 8</em><a class="headerlink" href="#settings.config.Polites.max_hint_window_in_ms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.memtable_flush_queue_size">
+<tt class="descname">memtable_flush_queue_size</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.memtable_flush_queue_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.memtable_total_space_in_mb">
+<tt class="descname">memtable_total_space_in_mb</tt><em class="property"> = 1024</em><a class="headerlink" href="#settings.config.Polites.memtable_total_space_in_mb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.multithreaded_compaction">
+<tt class="descname">multithreaded_compaction</tt><em class="property"> = False</em><a class="headerlink" href="#settings.config.Polites.multithreaded_compaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.num_nodes">
+<tt class="descname">num_nodes</tt><em class="property"> = 2</em><a class="headerlink" href="#settings.config.Polites.num_nodes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.partitioner">
+<tt class="descname">partitioner</tt><em class="property"> = 'org.apache.cassandra.dht.RandomPartitioner'</em><a class="headerlink" href="#settings.config.Polites.partitioner" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.permissions_validity_in_ms">
+<tt class="descname">permissions_validity_in_ms</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.permissions_validity_in_ms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.range_rpc_timeout_in_ms">
+<tt class="descname">range_rpc_timeout_in_ms</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.range_rpc_timeout_in_ms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.read_rpc_timeout_in_ms">
+<tt class="descname">read_rpc_timeout_in_ms</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.read_rpc_timeout_in_ms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.reduce_cache_capacity_to">
+<tt class="descname">reduce_cache_capacity_to</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.reduce_cache_capacity_to" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.reduce_cache_sizes_at">
+<tt class="descname">reduce_cache_sizes_at</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.reduce_cache_sizes_at" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.request_scheduler">
+<tt class="descname">request_scheduler</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.request_scheduler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.restore_snapshot">
+<tt class="descname">restore_snapshot</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.restore_snapshot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.row_cache_keys_to_save">
+<tt class="descname">row_cache_keys_to_save</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.row_cache_keys_to_save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.row_cache_provider">
+<tt class="descname">row_cache_provider</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.row_cache_provider" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.row_cache_save_period">
+<tt class="descname">row_cache_save_period</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.row_cache_save_period" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.row_cache_size_in_mb">
+<tt class="descname">row_cache_size_in_mb</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.row_cache_size_in_mb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.rpc_address">
+<tt class="descname">rpc_address</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.rpc_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.rpc_keepalive">
+<tt class="descname">rpc_keepalive</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.rpc_keepalive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.rpc_port">
+<tt class="descname">rpc_port</tt><em class="property"> = 9160</em><a class="headerlink" href="#settings.config.Polites.rpc_port" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.rpc_server_type">
+<tt class="descname">rpc_server_type</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.rpc_server_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.rpc_timeout_in_ms">
+<tt class="descname">rpc_timeout_in_ms</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.rpc_timeout_in_ms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.saved_caches_directory">
+<tt class="descname">saved_caches_directory</tt><em class="property"> = '/var/lib/cassandra/saved_caches'</em><a class="headerlink" href="#settings.config.Polites.saved_caches_directory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.seed_provider">
+<tt class="descname">seed_provider</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.seed_provider" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.seeds">
+<tt class="descname">seeds</tt><em class="property"> = '127.0.0.1'</em><a class="headerlink" href="#settings.config.Polites.seeds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.server_encryption_options">
+<tt class="descname">server_encryption_options</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.server_encryption_options" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.snapshot_before_compaction">
+<tt class="descname">snapshot_before_compaction</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.snapshot_before_compaction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.ssl_storage_port">
+<tt class="descname">ssl_storage_port</tt><em class="property"> = 7001</em><a class="headerlink" href="#settings.config.Polites.ssl_storage_port" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.start_native_transport">
+<tt class="descname">start_native_transport</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.start_native_transport" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.start_rpc">
+<tt class="descname">start_rpc</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.start_rpc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.storage_port">
+<tt class="descname">storage_port</tt><em class="property"> = 7000</em><a class="headerlink" href="#settings.config.Polites.storage_port" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.stream_throughput_outbound_megabits_per_sec">
+<tt class="descname">stream_throughput_outbound_megabits_per_sec</tt><em class="property"> = 400</em><a class="headerlink" href="#settings.config.Polites.stream_throughput_outbound_megabits_per_sec" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.thrift_framed_transport_size_in_mb">
+<tt class="descname">thrift_framed_transport_size_in_mb</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.thrift_framed_transport_size_in_mb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.thrift_max_message_length_in_mb">
+<tt class="descname">thrift_max_message_length_in_mb</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.thrift_max_message_length_in_mb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.trickle_fsync">
+<tt class="descname">trickle_fsync</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.trickle_fsync" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.trickle_fsync_interval_in_kb">
+<tt class="descname">trickle_fsync_interval_in_kb</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.trickle_fsync_interval_in_kb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.truncate_rpc_timeout_in_ms">
+<tt class="descname">truncate_rpc_timeout_in_ms</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.truncate_rpc_timeout_in_ms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="settings.config.Polites.write_rpc_timeout_in_ms">
+<tt class="descname">write_rpc_timeout_in_ms</tt><em class="property"> = None</em><a class="headerlink" href="#settings.config.Polites.write_rpc_timeout_in_ms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">settings Package</a><ul>
+<li><a class="reference internal" href="#module-settings.config"><tt class="docutils literal"><span class="pre">config</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="index.html">Polites 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Sean McCully.
+    </div>
+  </body>
+</html>

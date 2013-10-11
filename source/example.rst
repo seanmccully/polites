@@ -4,11 +4,11 @@ Example setting up a Cassandra Cluster
 
 Setting Up a 3 Node Cassandra Cluster
 ---------------------------------------------------------------
-The easiest way to use hector is to use the bootstrap script. Which installs the python dependencies and cassandra to path that hector uses as the config defaults. But this can easily be changed by
+The easiest way to use polites is to use the bootstrap script. Which installs the python dependencies and cassandra to path that polites uses as the config defaults. But this can easily be changed by
 modifying the config settings.::
 
-        $ git clone https://github.com/seanmccully/hector.git
-        Initialized empty Git repository in /home/smccully/hector/.git/
+        $ git clone https://github.com/seanmccully/polites.git
+        Initialized empty Git repository in /home/smccully/polites/.git/
         remote: Counting objects: 342, done.
         remote: Compressing objects: 100% (238/238), done.
         remote: Total 342 (delta 199), reused 234 (delta 93)
@@ -16,7 +16,7 @@ modifying the config settings.::
         Resolving deltas: 100% (199/199), done.
 
 
-        $ cd hector/
+        $ cd polites/
         $ ./bootstrap.sh 
         which: no java in (/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/smccully/bin)
         which: no 2 in (/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/home/smccully/bin)
@@ -30,25 +30,25 @@ modifying the config settings.::
         .....
         ....
 
-Optionally you can install just hector and the python dependencies::
+Optionally you can install just polites and the python dependencies::
 
-        $ cd hector/
+        $ cd polites/
         $ python setup.py install
 
-Once the install script has finished, can run from /usr/bin/hector.py::
+Once the install script has finished, can run from /usr/bin/polites.py::
 
-        $ hector --command server
+        $ polites --command server
 
 
-When ready to start additional nodes in the cluster, will need to make a few modifications to the configuration. Open /usr/etc/hector/config.py in your favorite editor.::
+When ready to start additional nodes in the cluster, will need to make a few modifications to the configuration. Open /usr/etc/polites/config.py in your favorite editor.::
 
-        $ vi /usr/etc/hector/config.py
+        $ vi /usr/etc/polites/config.py
 
                 seeds = '192.168.1.93' # Set this to the first cassandra node you started
                 cluster_num = 1 # Set this to the number which node represents in the ring
                 num_nodes = 3 # Here we set the number to total number of nodes we plan on using
 
-        $ hector.py --command server
+        $ polites.py --command server
 
 Finally we can check that cassandra is running on all hosts.::
 
@@ -88,8 +88,8 @@ Finally We should be able to check that all nodes belong to the same ring.::
 Troubleshooting
 -----------------
 
-Hector Will try to provide the latest error from the cassandra log file. There isn't always an error in the log file if cassandra fails to start.
-In these cases hector just prints a general error message.::
+Polites Will try to provide the latest error from the cassandra log file. There isn't always an error in the log file if cassandra fails to start.
+In these cases polites just prints a general error message.::
 
         $ curl http://192.168.1.95:8080
         <xml><status>Stopped</status><error><![CDATA[possible configuration error]]></error></xml>

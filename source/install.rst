@@ -1,4 +1,4 @@
-How to Install Hector
+How to Install Polites
 =======================================
 
 ******************
@@ -8,10 +8,10 @@ Install Script
 
         $ ./install.sh
 
-There is an install script in the base of Hector's root directory.
+There is an install script in the base of Polites's root directory.
 Which will attempt to install the dependencies for running cassandra, python dependencies, then downloading 
 the latest apache cassandra version it is aware of to /var/lib/cassandra.
-Using This method hector's agent.py should just run.::
+Using This method polites's agent.py should just run.::
 
        $ pip -r requirements.txt
 

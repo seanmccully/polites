@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>How to Use Hector From the Command Line &mdash; Hector 0.1 documentation</title>
+    <title>How to Use Polites From the Command Line &mdash; Polites 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,9 +25,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Hector 0.1 documentation" href="index.html" />
-    <link rel="next" title="Hector - HTTP Guide" href="http.html" />
-    <link rel="prev" title="How to Install Hector" href="install.html" /> 
+    <link rel="top" title="Polites 0.1 documentation" href="index.html" />
+    <link rel="next" title="Polites - HTTP Guide" href="http.html" />
+    <link rel="prev" title="How to Install Polites" href="install.html" /> 
   </head>
   <body>
     <div class="related">
@@ -40,12 +40,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="http.html" title="Hector - HTTP Guide"
+          <a href="http.html" title="Polites - HTTP Guide"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="install.html" title="How to Install Hector"
+          <a href="install.html" title="How to Install Polites"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Hector 0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Polites 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -54,10 +54,10 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="how-to-use-hector-from-the-command-line">
-<h1>How to Use Hector From the Command Line<a class="headerlink" href="#how-to-use-hector-from-the-command-line" title="Permalink to this headline">¶</a></h1>
-<p>Using Hector from the Command Line:</p>
-<div class="highlight-python"><pre>$ hector --help
+  <div class="section" id="how-to-use-polites-from-the-command-line">
+<h1>How to Use Polites From the Command Line<a class="headerlink" href="#how-to-use-polites-from-the-command-line" title="Permalink to this headline">¶</a></h1>
+<p>Using Polites from the Command Line:</p>
+<div class="highlight-python"><pre>$ polites --help
    optional arguments:
      -h, --help            show this help message and exit
      --command COMMAND     agent command to run ['server', 'tune', 'restore',
@@ -72,28 +72,28 @@
 <div class="section" id="the-available-list-of-commands-are-tune-server-and-restore">
 <h2>The available list of commands are tune, server, and restore.<a class="headerlink" href="#the-available-list-of-commands-are-tune-server-and-restore" title="Permalink to this headline">¶</a></h2>
 <p>The &#8211;conf option can be used to load a different configurator:</p>
-<div class="highlight-python"><pre>$ hector --command server --conf my-settings.py</pre>
+<div class="highlight-python"><pre>$ polites --command server --conf my-settings.py</pre>
 </div>
 <p>The &#8211;cass-conf option can be used in conjunction with the tune command to write the cassandra.yaml to non-default location:</p>
-<div class="highlight-python"><pre>$ hector --command tune --cass-conf /usr/path/cassandra.yaml
+<div class="highlight-python"><pre>$ polites --command tune --cass-conf /usr/path/cassandra.yaml
 $ ls -l /usr/path/cassandra.yaml
   -rw-rw-r--. 1 guest guest 2549 Jul  99 03:56 cassandra.yam</pre>
 </div>
 <p>The restore command takes the non-optional &#8211;restore-point option.:</p>
-<div class="highlight-python"><pre>$ hector --command restore --restore-point 1372972141943</pre>
+<div class="highlight-python"><pre>$ polites --command restore --restore-point 1372972141943</pre>
 </div>
 <p>The Restore Point should be a snapshot name, from a snapshot or backup that has been taken by the agent (i.e. ).:</p>
-<div class="highlight-python"><pre>hector::settings::config.py.backup_dir + [restore-point] + .tar.gz
+<div class="highlight-python"><pre>polites::settings::config.py.backup_dir + [restore-point] + .tar.gz
 Should exist and be a compressed tar file of a backup or snapshot keyspaces</pre>
 </div>
 <p>The snapshot commmand performs the snapshot action using the current configuration in settings/config.py:</p>
-<div class="highlight-python"><pre>$ hector --command snapshot</pre>
+<div class="highlight-python"><pre>$ polites --command snapshot</pre>
 </div>
-<p>The Server command starts the Hector Agent processes.:</p>
-<div class="highlight-python"><pre>$ hector --command server</pre>
+<p>The Server command starts the Polites Agent processes.:</p>
+<div class="highlight-python"><pre>$ polites --command server</pre>
 </div>
-<p>The Client Command Allows for making HTTP Commands to the configured hector server. If the supplementary command to client is supplied, the default status command is used. Restore uses the last-snapshot result.:</p>
-<div class="highlight-python"><pre>$ hector --command client ['status', 'restart', 'snapshot', 'restore']
+<p>The Client Command Allows for making HTTP Commands to the configured polites server. If the supplementary command to client is supplied, the default status command is used. Restore uses the last-snapshot result.:</p>
+<div class="highlight-python"><pre>$ polites --command client ['status', 'restart', 'snapshot', 'restore']
 &lt;xml&gt;&lt;status&gt;Running&lt;/status&gt;&lt;/xml&gt;
 &lt;xml&gt;&lt;auto-snapshot&gt;True&lt;/auto-snapshot&gt;&lt;last-snapshot&gt;1381067808927&lt;/last-snapshot&gt;&lt;/xml&gt;</pre>
 </div>
@@ -109,7 +109,7 @@ Should exist and be a compressed tar file of a backup or snapshot keyspaces</pre
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">How to Use Hector From the Command Line</a><ul>
+<li><a class="reference internal" href="#">How to Use Polites From the Command Line</a><ul>
 <li><a class="reference internal" href="#the-available-list-of-commands-are-tune-server-and-restore">The available list of commands are tune, server, and restore.</a></li>
 </ul>
 </li>
@@ -117,10 +117,10 @@ Should exist and be a compressed tar file of a backup or snapshot keyspaces</pre
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="install.html"
-                        title="previous chapter">How to Install Hector</a></p>
+                        title="previous chapter">How to Install Polites</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="http.html"
-                        title="next chapter">Hector - HTTP Guide</a></p>
+                        title="next chapter">Polites - HTTP Guide</a></p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -148,12 +148,12 @@ Should exist and be a compressed tar file of a backup or snapshot keyspaces</pre
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="http.html" title="Hector - HTTP Guide"
+          <a href="http.html" title="Polites - HTTP Guide"
              >next</a> |</li>
         <li class="right" >
-          <a href="install.html" title="How to Install Hector"
+          <a href="install.html" title="How to Install Polites"
              >previous</a> |</li>
-        <li><a href="index.html">Hector 0.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Polites 0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

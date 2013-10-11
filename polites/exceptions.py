@@ -14,14 +14,14 @@
 """
 
 
-class HectorException(BaseException):
+class PolitesException(BaseException):
     """
-        Hector Exception Class
+        Polites Exception Class
     """
 
     def __init__(self, mess):
         self.message = mess
-        super(HectorException, self).__init__()
+        super(PolitesException, self).__init__()
 
     def __unicode__(self):
         return unicode(self.message)

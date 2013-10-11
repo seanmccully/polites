@@ -1,6 +1,6 @@
-.. Hector documentation master file
+.. Polites documentation master file
 
-Welcome to Hector's documentation!
+Welcome to Polites's documentation!
 ==================================
 
 Contents:

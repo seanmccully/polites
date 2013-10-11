@@ -12,37 +12,46 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 """
-import inspect
-import sys
 import logging
-import urllib
+import sys
 from xml.etree import ElementTree
 
-from hector.exceptions import HectorException
+from polites.exceptions import PolitesException
 from twisted.internet import reactor
 from twisted.web.client import getPage
 
 LOG = logging.getLogger(__name__)
 
-class HectorClient(object):
-    """
+class PolitesClient(object):
+    """CLI interace for running Polite Commands.
+
+        Args:
+            config - Polites Config Object.
+            command - command to run
+            func - command function to call
     """
 
     url = "http://%s:%s/%s"
-    commands = ["status", "restart", "snapshots", "restore"]
-    headers={'Content-Type':'application/x-www-form-urlencoded'}
+    commands = ["status", "restart", "snapshot", "restore"]
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 
     def __init__(self, config, command=None, func=None):
         self.config = config
         if func:
             getattr(self, func.im_func.func_name)()
-        if command and command in command in HectorClient.commands:
+        if command and command in command in PolitesClient.commands:
             getattr(self, command,
-                    lambda:HectorException("Invalid Client Command"))()
+                    lambda: PolitesException("Invalid Client Command"))()
 
     def _make_request(self, paths, method=None, data=None):
-        """ """
-        kwargs = { 'headers' : HectorClient.headers }
+        """Makes http request.
+
+            Args:
+                path - http path for request.
+                method - http method for request.
+                data - data for http POST/PUT method(s).
+        """
+        kwargs = {'headers': PolitesClient.headers}
         if method:
             kwargs['method'] = method
             if data:
@@ -52,12 +61,16 @@ class HectorClient(object):
         fname = curr.f_back.f_code.co_name
         callback = getattr(self, fname + '_callback')
         if type(paths) == str:
-            url = HectorClient.url % (self.config.hostname, self.config.default_web_port, paths)
+            url = PolitesClient.url % (self.config.hostname,
+                                       self.config.default_web_port,
+                                       paths)
             deferred = getPage(url, **kwargs)
             self.add_cb(deferred, callback)
         else:
             for path in paths:
-                url = HectorClient.url % (self.config.hostname, self.config.default_web_port, path)
+                url = PolitesClient.url % (self.config.hostname,
+                                           self.config.default_web_port,
+                                           path)
                 deferred = getPage(url, **kwargs)
                 deferred.addCallback(callback)
             self.add_cb(deferred)
@@ -66,12 +79,16 @@ class HectorClient(object):
         return func.im_func.func_name
 
     def status_callback(self, response):
-        """ """
+        """Callback Method for printing response.
+
+            Args:
+                response - data to print to stdout.
+        """
         print response
 
     def status(self):
         """Gets status."""
-        self._make_request(('', HectorClient.commands[2], ))
+        self._make_request(('', PolitesClient.commands[2], ))
 
     def restart(self):
         """Performs Restart."""
@@ -81,25 +98,38 @@ class HectorClient(object):
     def snapshot(self):
         """Performs Restart."""
         setattr(self, 'snapshot_callback', self.status_callback)
-        self._make_request('snapshots', method='PUT')
+        self._make_request(PolitesClient.commands[-2], method='PUT')
 
     def restore(self):
         """Starts Restore from snapshot."""
-        url = HectorClient.url % (self.config.hostname, self.config.default_web_port, 'snapshots')
+        url = PolitesClient.url % (self.config.hostname,
+                                   self.config.default_web_port,
+                                   PolitesClient.commands[-2])
         deferred = getPage(url)
         deferred.addCallback(self.restore_next)
         deferred.addErrback(self.error_end)
 
     def restore_next(self, response):
-        """Receives response from snapshot command. For Restore Point"""
+        """Receives response from snapshot command. For Restore Point.
+
+            Args:
+                response - response text to evaulate.
+        """
         doc = ElementTree.fromstring(response)
         element = doc.find('last-snapshot')
         if element.text:
             setattr(self, 'restore_next_callback', self.status_callback)
-            self._make_request('restore', method='POST', data='snapshot-name=%s' % element.text)
+            self._make_request('restore', method='POST',
+                               data='snapshot-name=%s' % element.text)
 
 
     def add_cb(self, deferred, callback_func=None):
+        """Method for adding callback func.
+
+            Args:
+                deferred - deferred callbacks added to.
+                callback_func - function to add as callback.
+        """
         if callback_func:
             deferred.addCallback(callback_func)
         deferred.addCallback(self.end)

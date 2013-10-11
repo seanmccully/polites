@@ -2,7 +2,7 @@ settings Package
 ================
 
 :mod:`config` Module
--------------------
+--------------------------
 
 .. automodule:: settings.config
     :members:

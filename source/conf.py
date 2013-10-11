@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Hector documentation build configuration file, created by
+# Polites documentation build configuration file, created by
 # sphinx-quickstart on Fri Jul  5 03:28:48 2013.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Hector'
+project = u'Polites'
 copyright = u'2013, Sean McCully'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -164,7 +164,7 @@ html_show_sphinx = False
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Hectordoc'
+htmlhelp_basename = 'Politesdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -183,7 +183,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Hector.tex', u'Hector Documentation',
+  ('index', 'Polites.tex', u'Polites Documentation',
    u'Sean McCully', 'manual'),
 ]
 
@@ -213,7 +213,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'hector', u'Hector Documentation',
+    ('index', 'polites', u'Polites Documentation',
      [u'Sean McCully'], 1)
 ]
 
@@ -227,8 +227,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Hector', u'Hector Documentation',
-   u'Sean McCully', 'Hector', 'One line description of project.',
+  ('index', 'Polites', u'Polites Documentation',
+   u'Sean McCully', 'Polites', 'One line description of project.',
    'Miscellaneous'),
 ]
 

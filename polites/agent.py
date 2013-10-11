@@ -14,16 +14,16 @@
 """
 
 
+import argparse
+import logging
 import os
 import sys
-import logging
-import argparse
 
+from twisted.internet import reactor
+from twisted.internet.task import LoopingCall
+from twisted.web.resource import Resource
 from twisted.web.server import Site
 from twisted.web.static import File
-from twisted.internet import reactor
-from twisted.web.resource import Resource
-from twisted.internet.task import LoopingCall
 
 __dir__ = os.path.dirname(os.path.abspath(__file__))
 __parent__ = os.path.dirname(__dir__)
@@ -31,26 +31,27 @@ __parent__ = os.path.dirname(__dir__)
 if 'PYTHONPATH' not in os.environ:
     sys.path.append(__parent__)
 
-import hector
-from hector._hector import Hector
-from hector._hector import Restore
-from hector._hector import SnapShot
-from hector.cassandra import Cassandra
-from hector.client import HectorClient
-from hector.exceptions import HectorException
-from hector.utils import calc_seconds_from_hour
-from hector.utils import error_callback
-from hector.utils import find_www
-from hector.utils import get_backup_hour
-from hector.utils import load_config
-from hector.utils import schedule_task
-from hector.utils import set_path
-from hector.utils import tune
+import polites
+from polites._polites import Polites
+from polites._polites import Restore
+from polites._polites import SnapShot
+from polites.cassandra import Cassandra
+from polites.client import PolitesClient
+from polites.exceptions import PolitesException
+from polites.utils import calc_seconds_from_hour
+from polites.utils import error_callback
+from polites.utils import find_www
+from polites.utils import get_backup_hour
+from polites.utils import load_config
+from polites.utils import schedule_task
+from polites.utils import set_path
+from polites.utils import tune
 
 LOGGER = logging.getLogger(__name__)
 
 COMMANDS = ["server", "tune", "restore", "snapshot", "client"]
-CLIENT_COMMANDS = HectorClient.commands
+CLIENT_COMMANDS = PolitesClient.commands
+
 
 def setup_tasks(cass):
     monitor = LoopingCall(cass.monitor_proc, cass.config)
@@ -74,7 +75,7 @@ def run():
 def make_server(cass):
     setup_tasks(cass)
     root = Resource()
-    root.putChild('', Hector(cass))
+    root.putChild('', Polites(cass))
     root.putChild('snapshot', SnapShot(cass))
     root.putChild('restore', Restore(cass))
     www_path = find_www()
@@ -92,8 +93,8 @@ def make_server(cass):
 
 def is_client(args, cassandra, extra):
     if extra not in CLIENT_COMMANDS:
-        HectorException("Invalid Client Command")
-    HectorClient(cassandra.config, command=extra)
+        PolitesException("Invalid Client Command")
+    PolitesClient(cassandra.config, command=extra)
     run()
 
 def setup_logging(config):
@@ -101,7 +102,7 @@ def setup_logging(config):
     if config.log_dir:
         handler = logging.FileHandler(config.log_dir)
     else:
-        handler = logging.FileHandler('hector.log')
+        handler = logging.FileHandler('polites.log')
     if config.log_format:
         formatter = logging.Formatter(config.log_format)
     else:
@@ -116,7 +117,7 @@ def setup_logging(config):
 
 def parse_args(args, cassandra, parser, extra):
     if len(extra) > 1:
-        raise HectorException("Invalid Command Option")
+        raise PolitesException("Invalid Command Option")
     elif args.command in COMMANDS:
         args.command = args.command.lower()
         if args.command == COMMANDS[0]:
@@ -129,7 +130,7 @@ def parse_args(args, cassandra, parser, extra):
                                              args.restore_point + '.tar.gz')
                 return cassandra.do_restore(restore_point)
             else:
-                raise HectorException("restore commands restore-point")
+                raise PolitesException("restore commands restore-point")
         elif args.command.lower == COMMANDS[3]:
             return cassandra.take_snapshot()
         elif args.command == COMMANDS[4]: 
@@ -138,19 +139,19 @@ def parse_args(args, cassandra, parser, extra):
             except IndexError:
                 return is_client(args, cassandra, CLIENT_COMMANDS[0])
     elif args.cass_conf:
-        raise HectorException("conf needs command")
+        raise PolitesException("conf needs command")
 
     parser.print_usage()
 
 
 def use_path(conf):
-    ins_pths = [os.path.join(sys.exec_prefix, 'etc', 'hector'),
-                os.path.join(sys.exec_prefix, 'local', 'etc', 'hector'),
-                os.path.join('/etc', 'hector')]
+    ins_pths = [os.path.join(sys.exec_prefix, 'etc', 'polites'),
+                os.path.join(sys.exec_prefix, 'local', 'etc', 'polites'),
+                os.path.join('/etc', 'polites')]
     if conf:
         return set_path(conf)
-    elif os.path.exists(os.path.join(hector.__path__[0], '..', 'settings')):
-        set_path(os.path.join(hector.__path__[0], '..', 'settings'))
+    elif os.path.exists(os.path.join(polites.__path__[0], '..', 'settings')):
+        set_path(os.path.join(polites.__path__[0], '..', 'settings'))
     else:
         for ins_pth in ins_pths:
             if os.path.exists(os.path.join(ins_pth, 'config.py')):

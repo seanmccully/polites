@@ -14,15 +14,14 @@
 """
 
 import os
-from twisted.web.resource import Resource
+
 from twisted.internet import reactor
 from twisted.web.error import Error
+from twisted.web.resource import Resource
 
 
-class BaseHector(Resource):
-    """
-        Base Hector Resource
-    """
+class BasePolites(Resource):
+    """Base Polites Resource."""
     isLeaf = True
 
     def __init__(self, cass):
@@ -30,9 +29,12 @@ class BaseHector(Resource):
         self.cass = cass
 
 
-class Hector(BaseHector):
-    """
-        Hector Resource, returning status and restarting casandra process
+class Polites(BasePolites):
+    """Polites Resource, returning status and restarting casandra process.
+
+        Args:
+            name - http path.
+            request - request object.
     """
 
     running_str = "<xml><status>Running</status></xml>"
@@ -81,10 +83,9 @@ class Hector(BaseHector):
         return do_request()
 
 
-class SnapShot(BaseHector):
-    """
-       SnapShot Resource, showing latest snapshot, and taking a snapshot
-    """
+class SnapShot(BasePolites):
+    """SnapShot Resource, showing latest snapshot, and taking a snapshot."""
+
     def render_GET(self, request):
         return (("<xml><auto-snapshot>%s</auto-snapshot>" +
                 "<last-snapshot>%s</last-snapshot></xml>") %
@@ -95,10 +96,9 @@ class SnapShot(BaseHector):
         return "<xml><snapshot>True</snapshot></xml>"
 
 
-class Restore(BaseHector):
-    """
-       Restore Resource, restoring from a snapshot
-    """
+class Restore(BasePolites):
+    """Restore Resource, restoring from a snapshot."""
+
     def render_POST(self, request):
         if 'snapshot-name' in request.args:
             snapshot_name = request.args['snapshot-name'][0]

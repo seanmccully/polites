@@ -4,7 +4,7 @@ I hear software is prone to errors at times, if you run across an occurence whil
 
 email: sean_mccully@yahoo.com
 
-github: http://github.com/seanmccully/hector.git
+github: http://github.com/seanmccully/polites.git
 
 twitter: @sean_mccully
 

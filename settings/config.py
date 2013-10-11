@@ -2,7 +2,7 @@
 (c) 2013 Sean McCully
 Licenced under the Apache License, 2.0: http://opensource.org/licenses/apache2.0.php
 """
-#Hector config properties
+#Polites config properties
 ##Cassandra Process Name - used to check if process running
 cassandra_process_name = "CassandraDaemon"
 cassandra_user = None

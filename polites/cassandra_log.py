@@ -13,16 +13,16 @@
 #   under the License.
 """
 
-import os
-import re
 import logging
+import os
 from Queue import LifoQueue
-
+import re
 import yaml
 
-from hector.exceptions import HectorException
-from hector.utils import load_yaml
-from hector.backwards import BackwardsFileReader
+from polites.backwards import BackwardsFileReader
+from polites.exceptions import PolitesException
+from polites.utils import load_yaml
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -47,13 +47,12 @@ def get_cass_log_file(config):
     except TypeError as exc:
         LOGGER.exception("[get_cass_log_file] opening cassandra log yaml [%s]",
                          exc)
-        raise exc
 
     LOGGER.debug("[get_cass_log_file] leaving [%s]", log_file)
     if log_file:
         return log_file.replace('\n', '')
     else:
-        raise HectorException("error finding cassandra log file")
+        raise PolitesException("error finding cassandra log file")
 
 
 def inspect_cass_log(config):

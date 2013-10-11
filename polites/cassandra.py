@@ -13,28 +13,28 @@
 #   under the License.
 """
 
-import re
-import os
-from getpass import getuser
-import sys
-import yaml
-import time
-import tarfile
-import logging
-import subprocess
 from datetime import datetime
+from getpass import getuser
+import logging
+import os
+import re
+import subprocess
+import sys
+import tarfile
+import time
+import yaml
 
 from twisted.internet import reactor
 
-from hector.cassandra_log import inspect_cass_log
-from hector.exceptions import HectorException
-from hector.utils import tune
-from hector.utils import schedule_task
-from hector.utils import get_backup_hour
-from hector.utils import calc_seconds_from_hour
-from hector.utils import load_config
-from hector.utils import handle_pid
-from hector.utils import append_jvm_opt
+from polites.cassandra_log import inspect_cass_log
+from polites.exceptions import PolitesException
+from polites.utils import append_jvm_opt
+from polites.utils import calc_seconds_from_hour
+from polites.utils import get_backup_hour
+from polites.utils import handle_pid
+from polites.utils import load_config
+from polites.utils import schedule_task
+from polites.utils import tune
 
 LOGGER = logging.getLogger(__name__)
 
@@ -42,8 +42,11 @@ SU_COMMAND = "/usr/bin/sudo su %s -c"
 
 
 class Cassandra(object):
-    """
-        Cassandra object for monitoring, restoring
+    """Cassandra object for monitoring, restoring Cassandra Host.
+
+        Args:
+            config - config object for Cassandra.
+            update_func - function to use for updating Cassandra YAML.
     """
 
     def __init__(self, config, update_func):
@@ -72,9 +75,7 @@ class Cassandra(object):
         yaml_data['initial_token'] = self._token_gen(ring_size=63)
 
     def update_defaults_2_0(self, yaml_data, hostname=None):
-        """
-            Update Cassandra Yaml Config defaults with config data
-        """
+        """Update Cassandra Yaml Config defaults with config data."""
 
         LOGGER.debug("[update_defaults_1_2] called")
 
@@ -98,9 +99,7 @@ class Cassandra(object):
         LOGGER.debug("[update_defaults_1_2] leaving")
 
     def update_defaults_1_1(self, yaml_data, hostname=None):
-        """
-            Update Cassandra Yaml Config defaults with config data
-        """
+        """Update Cassandra Yaml Config defaults with config data."""
 
         def pop_key(lst, k):
             lst.pop(lst.index(k))
@@ -134,16 +133,14 @@ class Cassandra(object):
         if self.config.row_cache_size_in_mb:
             yaml_data['row_cache_size_in_mb'] = \
                 self.config.row_cache_size_in_mb
-            pops(key_list, 'key_cache_size_in_mb')
+            pops(key_list, 'row_cache_size_in_mb')
             if self.config.row_cache_keys_to_save:
                 yaml_data['row_cache_keys_to_save'] = \
                     self.config.row_cache_keys_to_save
                 pops(key_list, 'row_cache_keys_to_save')
 
     def setup_seeds(self, yaml_data, key_list, pops):
-        """
-            Set Seeds from configuration
-        """
+        """Set Seeds from configuration."""
         try:
             if yaml_data['seed_provider']:
                 pops(key_list, 'seed_provider')
@@ -163,8 +160,7 @@ class Cassandra(object):
                    / self.config.num_nodes)
 
     def write_cassandra_yaml(self, cassandra_yaml, yaml_data):
-        """
-            Write Cassandra Yaml config
+        """Write Cassandra Yaml config.
                 cassandra_yaml - location of cassandra Yaml
                 yaml_data - Yaml data to write to config
         """
@@ -178,9 +174,7 @@ class Cassandra(object):
         LOGGER.debug("[write_cassandra_yaml] leaving [%s]", cassandra_yaml)
 
     def backups_enabled(self):
-        """
-            Check if backups are enabled from config
-        """
+        """Check if backups are enabled from config."""
         if self.config.enable_backups:
             return True
         else:
@@ -194,10 +188,7 @@ class Cassandra(object):
             return self.config.commitlog_directory
 
     def modify_environment(self):
-        """
-            Modify environment with config
-            for running cassandra commands
-        """
+        """Modify environment with config for running cassandra commands."""
         env = os.environ.copy()
         new_env_vars = {"HEAP_NEWSIZE": self.config.heap_newgen_size,
                         "MAX_HEAP_SIZE": self.config.max_heap_size,
@@ -213,9 +204,7 @@ class Cassandra(object):
         return env
 
     def _run_command(self, command, use_su=True):
-        """
-            Run a cassandra command
-        """
+        """Run a cassandra command."""
         jvm_err = ("The stack size specified is too small," +
                    " Specify at least 228k")
         LOGGER.debug("[_run_command] called with command [%s]", command)
@@ -233,13 +222,12 @@ class Cassandra(object):
         except OSError as exc:
             LOGGER.exception("[_run_command] error running command [%s] [%s]",
                              command, exc)
-            return None
 
         time.sleep(0.1)
         ps.wait()
         output = ps.communicate()
         LOGGER.debug("[_run_command] output [%s]", output)
-        if len(output[0]) and jvm_err in output[0]:
+        if output[0] and len(output[0]) and jvm_err in output[0]:
             append_jvm_opt(self)
         if output[0]:
             return output[0] or output[1]
@@ -247,15 +235,14 @@ class Cassandra(object):
             if ps.returncode == 1 and output[1]:
                 LOGGER.error("[_run_command] configuration error, trying to" +
                              " run command that does not exist %s", command)
-                raise HectorException("configuration error can't run commands")
+                raise PolitesException("configuration error"
+                                       " can't run commands")
             else:
                 LOGGER.warn("[_run_command] command failed [%s]", output)
                 return None
 
     def start_cassandra(self):
-        """
-            Start the cassandra process
-        """
+        """Strt the cassandra process."""
         LOGGER.debug("[start_cassandra] called last_safe_start [%s]",
                      self.last_safe_start)
         if not self.last_safe_start:
@@ -265,14 +252,15 @@ class Cassandra(object):
             try:
                 self.cass_error_msg = inspect_cass_log(self.config)
             except TypeError:
-                LOGGER.exception("[start_cassandra] can't " +
+                LOGGER.error("[start_cassandra] can't " +
                                  "start cassandra check config.py")
                 self.cass_error_msg = "cassandra doesn't start, no log error"
             else:
                 self.do_tune()
             LOGGER.warn("[start_cassandra] cassandra error message [%s]",
-                        self.config.cass_error)
+                        self.cass_error_msg)
 
+        LOGGER.error("%s", self.config.cassandra_start_options)
         pid_loc = os.path.join(*self.config.cassandra_start_options[1])
         handle_pid(pid_loc)
         self.last_safe_start = int(time.time())
@@ -288,9 +276,7 @@ class Cassandra(object):
         tune(self)
 
     def stop_cassandra(self):
-        """
-            Stop the cassandra process
-        """
+        """Stop the cassandra process."""
         LOGGER.debug("[stop_cassandra] called")
         command = ' '.join((self.config.cassandra_stop_script,
                             os.path.join(*self.config.cassandra_stop_options)))
@@ -299,17 +285,16 @@ class Cassandra(object):
         return True
 
     def safe_start_cassandra(self):
-        """
-            Make sure cassandra process has been stopped before starting
-        """
+        """Make sure cassandra process has been stopped before starting."""
         LOGGER.debug("[safe_start_cassandra] called")
         self.stop_cassandra()
         if self.start_cassandra():
             return True
 
     def monitor_proc(self, autostart=True):
-        """
-            Check if Cassandra process is running
+        """Check if Cassandra process is running.
+
+            Args:
                 autostart - If true start process if not running
         """
         LOGGER.debug("[monitor_proc] called")
@@ -328,16 +313,21 @@ class Cassandra(object):
         return self.cassandra_running
 
     def _node_tool_command(self, hostname, jmx_port, command_option):
-        """
-            Run a cassandra nodetool command
+        """Run a cassandra nodetool command.
+
+            Args:
+                hostname - cassandra host hostname.
+                jmx_port - jmx port for cassandra host.
+                command_option - command options for node tool command
         """
         command = (os.path.join(self.config.cass_home, 'bin', 'nodetool') +
                    ' -h %s -p %d %s' % (hostname, jmx_port, command_option, ))
         return command
 
     def _match_output(self, output, match):
-        """
-            Match command out with a compiled regex
+        """Match command out with a compiled regex.
+
+            Args:
                 match - compiled regex expression
                 output - to match against
         """
@@ -352,9 +342,7 @@ class Cassandra(object):
         return
 
     def take_snapshot(self):
-        """
-            Perform snapshot operation
-        """
+        """Perform snapshot operation."""
         LOGGER.debug("[take_snapshot] called")
 
         if self.clear_snapshot():
@@ -389,9 +377,7 @@ class Cassandra(object):
         return hostname
 
     def clear_snapshot(self):
-        """
-            Clear Snapshots
-        """
+        """Clear Snapshots."""
         LOGGER.debug("[clear_snapshot] called")
 
         command = self._node_tool_command(self._get_hostname(),
@@ -415,9 +401,7 @@ class Cassandra(object):
             return self.config.data_file_directories
 
     def take_backup(self, backup_name=None):
-        """
-            Collect incremental backups and compress
-        """
+        """Collect incremental backups and compress."""
         LOGGER.debug("[take_backup] called")
         data_dir = self.data_file_directories
         if type(data_dir) is list:
@@ -439,8 +423,9 @@ class Cassandra(object):
                              get_backup_hour(self.config)), self.take_backup)
 
     def verify_snapshot(self, snapshot_name=None):
-        """
-            Collect and compress a snapshot
+        """Collect and compress a snapshot.
+
+            Args:
                 snapshot_name - snapshot to collect
         """
         LOGGER.debug("[verify_snapshot] called")
@@ -464,8 +449,9 @@ class Cassandra(object):
             tar.close()
 
     def do_restore(self, restore_point):
-        """
-            Restore Cassandra from a snapshot
+        """Restore Cassandra from a snapshot.
+
+            Args:
                 restore_point - location of snapshot
         """
         LOGGER.debug("[do_restore] called with restore_poit [%s]",
@@ -517,10 +503,7 @@ class Cassandra(object):
         return self.safe_start_cassandra()
 
     def find_snapshot(self):
-        """
-            If Snapshot directory exists, report latest snapshot id
-        """
-
+        """If Snapshot directory exists, report latest snapshot id."""
         snapshot_id_match = re.compile(r'^(\d+)\.tar\.gz$')
         backup_dir = self.config.backup_dir
         if os.path.exists(backup_dir):

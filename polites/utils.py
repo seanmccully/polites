@@ -14,14 +14,14 @@
 """
 
 import os
-import hector
+import polites
 import imp
 import logging
 import socket
 import yaml
 
 from datetime import datetime
-from hector.exceptions import HectorException
+from polites.exceptions import PolitesException
 from twisted.internet import reactor
 
 LOGGER = logging.getLogger(__name__)
@@ -53,8 +53,8 @@ def get_hostname():
 
 
 def find_www():
-    def_ins_www = os.path.join('/var', 'www', 'hector')
-    alt_www = os.path.join(hector.__path__[0], '..', 'docs')
+    def_ins_www = os.path.join('/var', 'www', 'polites')
+    alt_www = os.path.join(polites.__path__[0], '..', 'docs')
     if os.path.exists(def_ins_www):
         return def_ins_www
     elif os.path.exists(alt_www):
@@ -71,7 +71,7 @@ def load_config():
     try:
         return imp.load_source('config', os.path.join(USE_PATH, 'config.py'))
     except (TypeError, IOError):
-        raise HectorException("Config Does Not Exists [%s]" % USE_PATH)
+        raise PolitesException("Config Does Not Exists [%s]" % USE_PATH)
 
 
 def conf_file(cass):
@@ -83,7 +83,7 @@ def conf_file(cass):
         elif cass.config.VERSION == 1.1:
             return os.path.join(USE_PATH, cass.config.config_11_yaml)
     except AttributeError:
-        raise HectorException("Invalid Path [%s]" % USE_PATH)
+        raise PolitesException("Invalid Path [%s]" % USE_PATH)
 
 
 def tune(cass):
